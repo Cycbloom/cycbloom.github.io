@@ -77,7 +77,7 @@ enabled = true
 ## Comments
 [comments]
 enabled = true
-provider = "twikoo"
+provider = "waline"
 
 [comments.disqusjs]
 shortname = ""
@@ -105,16 +105,15 @@ clientSecret = ""
 autoCreateIssue = false
 
 [comments.waline]
-serverURL = ""
-lang = ""
-visitor = ""
+serverURL = "https://waline-vercel-fg1ego1fy-cycblooms-projects.vercel.app/"
+lang = "zh-CN"
 avatar = ""
 emoji = ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"]
-requiredMeta = ["name", "email", "url"]
-placeholder = ""
+requiredMeta = ["nick", "mail", "url"]
 
 [comments.waline.locale]
 admin = "Admin"
+placeholder = "评论区掩码"
 
 [comments.twikoo]
 envId = "comments"
