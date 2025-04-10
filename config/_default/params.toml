@@ -105,7 +105,7 @@ clientSecret = ""
 autoCreateIssue = false
 
 [comments.waline]
-serverURL = "https://waline-vercel-fg1ego1fy-cycblooms-projects.vercel.app/"
+serverURL = "comment.cycbloom.com"
 lang = "zh-CN"
 avatar = ""
 emoji = ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"]
