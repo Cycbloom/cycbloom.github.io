@@ -113,7 +113,7 @@ requiredMeta = ["nick", "mail", "url"]
 
 [comments.waline.locale]
 admin = "Admin"
-placeholder = "评论区掩码"
+placeholder = "说点啥~"
 
 [comments.twikoo]
 envId = "comments"
