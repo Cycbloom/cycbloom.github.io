@@ -1,10 +1,11 @@
 ---
-title: "From Hugo to Homebrew"
+title: "From Hugo to My Blog"
 description: 自主开发全栈博客系统，同时加入我希望的个性功能
 date: 2025-04-10T21:15:44+08:00
 image: cover.jpg
-math:
-license:
+slug: hugo-to-my-blog
+series:
+  - 自主开发全栈博客系统全过程
 ---
 
 ## 📝 项目概述
@@ -25,5 +26,7 @@ license:
 - **技术挑战**：融合现代技术栈的完整 Web 应用实践
 
 ## 📚 博客大纲
+
+1. [初始化项目](/p/hugo-to-my-blog/chapter1)
 
 > Photo by [Javier Miranda](https://unsplash.com/@nuvaproductions?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)> on [Unsplash](https://unsplash.com/photos/a-view-of-the-earth-from-space-Jn2EaLLYZfY?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
