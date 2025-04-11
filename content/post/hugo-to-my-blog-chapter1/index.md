@@ -10,6 +10,11 @@ tag:
   - Docker
 series:
   - 自主开发全栈博客系统全过程
+image:
+math:
+license:
+hidden: false
+comments: true
 ---
 
 ## 🎬 初始化
