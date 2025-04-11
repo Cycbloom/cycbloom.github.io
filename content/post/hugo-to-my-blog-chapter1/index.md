@@ -1036,7 +1036,7 @@ indent_style = tab
 - **强制校验（推荐）**：
 
   - 首先在项目根目录执行`npm install husky @commitlint/cli @commitlint/config-conventional --save-dev`。其中，`husky`是 Git hooks 管理工具，`@commitlint/cli`是提交信息校验命令行工具，`@commitlint/config-conventional`是社区标准校验规则。
-  - 接着执行`npx husky-init && npm install`初始化 husky 配置，此时会生成.husky 目录结构：
+  - 接着执行`npx husky-init &c& npm install`初始化 husky 配置，此时会生成.husky 目录结构：
 
     ```text
     .husky/
@@ -1101,43 +1101,90 @@ yarn.lock binary
 
 例如，`* text=auto eol=lf`表示自动检测文本文件，并将换行符设置为 LF；`package-lock.json binary`则将`package - lock.json`文件标记为二进制文件，避免在合并时出现不必要的冲突。
 
-### 🚨 基础 ESLint 配置（.eslintrc）
+### 🚨 基础 ESLint 配置（eslint.config.mjs）
 
 ESLint 用于检查和规范代码质量。
 
-```json
-{
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "prettier"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "react", "import"],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
+使用`npx  @eslint/migrate-config .eslintrc`转换`.eslintrc`文件
+
+```mjs
+// eslint.config.mjs
+import { defineConfig } from "eslint/config";
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import react from "eslint-plugin-react";
+import _import from "eslint-plugin-import";
+import reactHooks from "eslint-plugin-react-hooks";
+import { fixupPluginRules } from "@eslint/compat";
+import tsParser from "@typescript-eslint/parser";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import js from "@eslint/js";
+import { FlatCompat } from "@eslint/eslintrc";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
+});
+
+export default defineConfig([
+  {
+    extends: compat.extends(
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "prettier"
+    ),
+
+    plugins: {
+      "@typescript-eslint": typescriptEslint,
+      react,
+      import: fixupPluginRules(_import),
+      "react-hooks": fixupPluginRules(reactHooks),
+    },
+
+    languageOptions: {
+      parser: tsParser,
+    },
+
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+
+    rules: {
+      "@typescript-eslint/no-explicit-any": "error",
+
+      "@typescript-eslint/explicit-function-return-type": [
+        "warn",
+        {
+          allowExpressions: true,
+        },
+      ],
+
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+
+      "import/order": [
+        "error",
+        {
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+          ],
+          "newlines-between": "always",
+        },
+      ],
+    },
   },
-  "rules": {
-    "react/react-in-jsx-scope": "off",
-    "import/order": [
-      "error",
-      {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "index"
-        ],
-        "newlines-between": "always"
-      }
-    ]
-  }
-}
+]);
 ```
 
 以`import/order`规则为例，它的作用是统一模块导入顺序。分组优先级如下：
