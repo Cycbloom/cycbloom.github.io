@@ -1,0 +1,1044 @@
+<!doctype html><html lang=zh-CN dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="📦 从零开始搭建全栈博客系统的基础架构"><title>Chapter1: 项目初始化与基础架构搭建</title>
+<link rel=canonical href=https://blog.cycbloom.com/p/hugo-to-my-blog/chapter1/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Chapter1: 项目初始化与基础架构搭建"><meta property='og:description' content="📦 从零开始搭建全栈博客系统的基础架构"><meta property='og:url' content='https://blog.cycbloom.com/p/hugo-to-my-blog/chapter1/'><meta property='og:site_name' content='鎏金阁'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2025-04-11T22:00:00+08:00'><meta property='article:modified_time' content='2025-04-11T22:00:00+08:00'><meta name=twitter:title content="Chapter1: 项目初始化与基础架构搭建"><meta name=twitter:description content="📦 从零开始搭建全栈博客系统的基础架构"><link rel="shortcut icon" href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_84d7cd848dfd0892.png width=300 height=299 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🦄</span></figure><div class=site-meta><h1 class=site-name><a href=/>鎏金阁</a></h1><h2 class=site-description>🔥点燃灵感，共享思维的篝火</h2></div></header><ol class=menu-social><li><a href=https://github.com/Cycbloom target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#-初始化>🎬 初始化</a><ol><li><a href=#-初始化过程详解>🔧 初始化过程详解</a></li><li><a href=#-项目结构规范>📂 项目结构规范</a></li></ol></li><li><a href=#-后端-mvp>🚀 后端 MVP</a><ol><li><a href=#-核心配置>⚙️ 核心配置</a></li><li><a href=#-实现核心模块>🧩 实现核心模块</a></li><li><a href=#-健康检查端点-srchealthhealthcontrollerts>🩺 健康检查端点 (src/health/health.controller.ts)</a></li><li><a href=#-调整入口文件-srcmaints>🔧 调整入口文件 (src/main.ts)</a></li><li><a href=#-验证步骤>✅ 验证步骤</a></li><li><a href=#-推荐工具链>🛠️ 推荐工具链</a></li></ol></li><li><a href=#-容器化部署>🐳 容器化部署</a><ol><li><a href=#-文件结构预览>📁 文件结构预览</a></li><li><a href=#-前端镜像配置-frontenddockerfileprod>🖥️ 前端镜像配置 (frontend/Dockerfile.prod)</a></li><li><a href=#-后端镜像配置-backenddockerfileprod>🗄️ 后端镜像配置 (backend/Dockerfile.prod)</a></li><li><a href=#-数据库初始化-infradockermongoinit-mongojs>🧩 数据库初始化 (infra/docker/mongo/init-mongo.js)</a></li><li><a href=#-nginx-配置-infradockernginxtacticoreconf>🌐 Nginx 配置 (infra/docker/nginx/tacticore.conf)</a></li><li><a href=#-docker-compose-编排>🎛 docker-compose 编排</a></li><li><a href=#-启动命令>🚀 启动命令</a></li></ol></li><li><a href=#-docker-热更新>⚡ Docker 热更新</a><ol><li><a href=#-前端热更新实现方案>🖥️ 前端热更新实现方案</a><ol><li><a href=#调整前端-dockerfile>调整前端 Dockerfile</a></li><li><a href=#添加-docker-composedevyml>添加 docker-compose.dev.yml</a></li><li><a href=#配置-vite-开发服务器>配置 Vite 开发服务器</a></li></ol></li><li><a href=#-前端热更新工作原理>🔄 前端热更新工作原理</a></li><li><a href=#-前端热更新验证>✅ 前端热更新验证</a></li><li><a href=#-后端热重载完整解决方案>🗄️ 后端热重载完整解决方案</a><ol><li><a href=#拆分后端-dockerfile>拆分后端 Dockerfile</a></li><li><a href=#调整-docker-compose-配置>调整 docker-compose 配置</a></li><li><a href=#nodemon-配置>nodemon 配置</a></li></ol></li><li><a href=#-后端热重载验证>✅ 后端热重载验证</a></li><li><a href=#-一键启动方案>🚀 一键启动方案</a><ol><li><a href=#生产环境>生产环境</a></li><li><a href=#开发环境完整热更新>开发环境（完整热更新）</a></li></ol></li></ol></li><li><a href=#-问题与解决方案>🚨 问题与解决方案</a><ol><li><a href=#-用户和密码管理问题>🔐 用户和密码管理问题</a><ol><li><a href=#用户和密码定义关系>用户和密码定义关系</a></li><li><a href=#修改用户密码>修改用户密码</a></li><li><a href=#安全建议>安全建议</a></li></ol></li><li><a href=#-docker-构建前端镜像时找不到-nginx-配置文件问题>📂 Docker 构建前端镜像时找不到 Nginx 配置文件问题</a><ol><li><a href=#错误原因>错误原因</a></li><li><a href=#解决方案>解决方案</a></li></ol></li><li><a href=#-环境变量加载问题>📌 环境变量加载问题</a><ol><li><a href=#docker-compose-的环境变量优先级问题>Docker Compose 的环境变量优先级问题</a></li><li><a href=#解决方案-1>解决方案</a></li></ol></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/p/hugo-to-my-blog/chapter1/>Chapter1: 项目初始化与基础架构搭建</a></h2><h3 class=article-subtitle>📦 从零开始搭建全栈博客系统的基础架构</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Apr 11, 2025</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 12 分钟</time></div></footer></div></header><section class=article-content><h2 id=-初始化>🎬 初始化</h2><h3 id=-初始化过程详解>🔧 初始化过程详解</h3><p>1️⃣ <strong>版本控制初始化</strong><br>📦 使用 <code>git init</code> 初始化 Git 仓库<br>🚫 创建 <code>.gitignore</code> 文件排除以下内容：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>node_modules/  <span class=c1># 第三方依赖</span>
+</span></span><span class=line><span class=cl>.env           <span class=c1># 敏感配置</span>
+</span></span><span class=line><span class=cl>.DS_Store      <span class=c1># Mac系统文件</span>
+</span></span><span class=line><span class=cl>*.log          <span class=c1># 日志文件</span>
+</span></span><span class=line><span class=cl>dist/          <span class=c1># 构建产物</span>
+</span></span><span class=line><span class=cl>coverage/      <span class=c1># 测试报告</span>
+</span></span></code></pre></td></tr></table></div></div><p>2️⃣ <strong>前端脚手架搭建</strong><br>⚡ 通过 Vite 快速生成项目：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>npm create vite@latest
+</span></span></code></pre></td></tr></table></div></div><p>▸ 项目名称：<code>frontend</code><br>▸ 框架选择：<code>React</code> + <code>TypeScript</code><br>💡 优势：组件化开发 + 类型安全</p><p>3️⃣ <strong>核心依赖安装</strong><br>🔌 进入项目目录执行安装：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nb>cd</span> frontend <span class=o>&amp;&amp;</span> npm install
+</span></span></code></pre></td></tr></table></div></div><p>📚 关键依赖说明：</p><div class=table-wrapper><table><thead><tr><th>依赖包</th><th>功能</th></tr></thead><tbody><tr><td><code>@mui/material</code></td><td>Material Design 组件库</td></tr><tr><td><code>react-router-dom</code></td><td>SPA 路由管理</td></tr><tr><td><code>@reduxjs/toolkit</code></td><td>状态管理工具</td></tr><tr><td><code>axios</code></td><td>HTTP 客户端</td></tr></tbody></table></div><p>4️⃣ <strong>后端服务初始化</strong><br>🛠️ 创建 NestJS 项目：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>mkdir backend <span class=o>&amp;&amp;</span> <span class=nb>cd</span> backend
+</span></span><span class=line><span class=cl>npm install -g @nestjs/cli
+</span></span><span class=line><span class=cl>nest new . --package-manager npm
+</span></span></code></pre></td></tr></table></div></div><h3 id=-项目结构规范>📂 项目结构规范</h3><p>项目结构的合理规划对于项目的长期维护和扩展十分关键。我们的全栈博客系统采用如下结构：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span><span class=lnt>88
+</span><span class=lnt>89
+</span><span class=lnt>90
+</span><span class=lnt>91
+</span><span class=lnt>92
+</span><span class=lnt>93
+</span><span class=lnt>94
+</span><span class=lnt>95
+</span><span class=lnt>96
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>TactiCore/
+</span></span><span class=line><span class=cl>├── .github/                   # GitHub 配置
+</span></span><span class=line><span class=cl>│   ├── workflows/             # CI/CD 流水线
+</span></span><span class=line><span class=cl>│   └── ISSUE_TEMPLATE/        # Issue 模板
+</span></span><span class=line><span class=cl>├── frontend/                  # 前端 (Vite + React)
+</span></span><span class=line><span class=cl>│   ├── public/
+</span></span><span class=line><span class=cl>│   │   ├── favicons/          # 多尺寸网站图标
+</span></span><span class=line><span class=cl>│   │   └── robots.txt
+</span></span><span class=line><span class=cl>│   └── src/
+</span></span><span class=line><span class=cl>│       ├── api/               # API 请求封装
+</span></span><span class=line><span class=cl>│       ├── assets/            # 静态资源
+</span></span><span class=line><span class=cl>│       │   ├── fonts/
+</span></span><span class=line><span class=cl>│       │   ├── images/
+</span></span><span class=line><span class=cl>│       │   └── styles/        # 全局样式
+</span></span><span class=line><span class=cl>│       ├── components/        # 组件库
+</span></span><span class=line><span class=cl>│       │   ├── ui/            # 原子组件
+</span></span><span class=line><span class=cl>│       │   ├── shared/        # 业务组件
+</span></span><span class=line><span class=cl>│       │   └── providers/     # Context 提供者
+</span></span><span class=line><span class=cl>│       ├── features/          # Redux Toolkit 模块
+</span></span><span class=line><span class=cl>│       ├── hooks/             # 自定义 Hooks
+</span></span><span class=line><span class=cl>│       ├── layouts/           # 页面布局
+</span></span><span class=line><span class=cl>│       ├── locales/           # 国际化
+</span></span><span class=line><span class=cl>│       │   ├── en/
+</span></span><span class=line><span class=cl>│       │   └── zh/
+</span></span><span class=line><span class=cl>│       ├── pages/             # 路由页面
+</span></span><span class=line><span class=cl>│       ├── stores/            # 状态管理
+</span></span><span class=line><span class=cl>│       ├── test/              # 测试套件
+</span></span><span class=line><span class=cl>│       │   ├── e2e/           # 端到端测试
+</span></span><span class=line><span class=cl>│       │   ├── integration/
+</span></span><span class=line><span class=cl>│       │   ├── unit/
+</span></span><span class=line><span class=cl>│       │   └── mocks/         # Mock 数据
+</span></span><span class=line><span class=cl>│       ├── theme/             # 主题系统
+</span></span><span class=line><span class=cl>│       │   ├── dark/
+</span></span><span class=line><span class=cl>│       │   └── light/
+</span></span><span class=line><span class=cl>│       ├── types/             # TS 类型定义
+</span></span><span class=line><span class=cl>│       ├── utils/             # 工具函数
+</span></span><span class=line><span class=cl>│       │   ├── helpers/
+</span></span><span class=line><span class=cl>│       │   ├── validation/
+</span></span><span class=line><span class=cl>│       │   └── performance/   # 性能监控
+</span></span><span class=line><span class=cl>│       └── main.tsx
+</span></span><span class=line><span class=cl>├── backend/                   # 后端 (NestJS + MongoDB)
+</span></span><span class=line><span class=cl>│   ├── src/
+</span></span><span class=line><span class=cl>│   │   ├── app.module.ts      # 根模块
+</span></span><span class=line><span class=cl>│   │   ├── main.ts            # 入口文件
+</span></span><span class=line><span class=cl>│   │   ├── core/              # 核心模块
+</span></span><span class=line><span class=cl>│   │   │   ├── config/        # 环境配置
+</span></span><span class=line><span class=cl>│   │   │   │   └── config.module.ts
+</span></span><span class=line><span class=cl>│   │   │   ├── exceptions/    # 全局异常处理
+</span></span><span class=line><span class=cl>│   │   │   └── decorators/    # 自定义装饰器
+</span></span><span class=line><span class=cl>│   │   ├── database/          # 数据库模块
+</span></span><span class=line><span class=cl>│   │   │   ├── database.module.ts
+</span></span><span class=line><span class=cl>│   │   │   └── schemas/       # MongoDB Schema
+</span></span><span class=line><span class=cl>│   │   ├── users/             # 用户模块示例
+</span></span><span class=line><span class=cl>│   │   │   ├── dto/           # 数据传输对象
+</span></span><span class=line><span class=cl>│   │   │   ├── entities/      # 数据库实体
+</span></span><span class=line><span class=cl>│   │   │   ├── users.module.ts
+</span></span><span class=line><span class=cl>│   │   │   ├── users.service.ts
+</span></span><span class=line><span class=cl>│   │   │   └── users.controller.ts
+</span></span><span class=line><span class=cl>│   │   ├── common/            # 通用工具
+</span></span><span class=line><span class=cl>│   │   │   ├── filters/       # 异常过滤器
+</span></span><span class=line><span class=cl>│   │   │   ├── interceptors/  # 拦截器
+</span></span><span class=line><span class=cl>│   │   │   └── pipes/         # 数据管道
+</span></span><span class=line><span class=cl>│   │   └── health/            # 健康检查模块
+</span></span><span class=line><span class=cl>│   ├── test/                  # 测试套件
+</span></span><span class=line><span class=cl>│   │   ├── e2e/              # 端到端测试
+</span></span><span class=line><span class=cl>│   │   └── unit/             # 单元测试
+</span></span><span class=line><span class=cl>│   ├── docker/               # Docker 配置
+</span></span><span class=line><span class=cl>│   │   └── entrypoint.sh     # 容器启动脚本
+</span></span><span class=line><span class=cl>│   ├── .env.example          # 环境变量模板
+</span></span><span class=line><span class=cl>│   └── nest-cli.json         # Nest CLI 配置
+</span></span><span class=line><span class=cl>├── docs/                     # 文档中心
+</span></span><span class=line><span class=cl>│   ├── api.md               # API 文档
+</span></span><span class=line><span class=cl>│   ├── architecture.md      # 架构设计
+</span></span><span class=line><span class=cl>│   ├── setup.md             # 环境配置
+</span></span><span class=line><span class=cl>│   └── CHANGELOG.md         # 更新日志
+</span></span><span class=line><span class=cl>├── infra/                   # 基础设施
+</span></span><span class=line><span class=cl>│   ├── docker/              # Docker 配置
+</span></span><span class=line><span class=cl>│   │   ├── nginx/
+</span></span><span class=line><span class=cl>│   │   └── mongo/
+</span></span><span class=line><span class=cl>│   ├── k8s/                 # Kubernetes 配置
+</span></span><span class=line><span class=cl>│   └── monitoring/          # 监控配置
+</span></span><span class=line><span class=cl>│       ├── prometheus/
+</span></span><span class=line><span class=cl>│       └── grafana/
+</span></span><span class=line><span class=cl>├── scripts/                 # 自动化脚本
+</span></span><span class=line><span class=cl>├── .vscode/                 # IDE 配置
+</span></span><span class=line><span class=cl>├── .husky/                  # Git hooks
+</span></span><span class=line><span class=cl>├── .editorconfig            # 编辑器规范
+</span></span><span class=line><span class=cl>├── .eslintrc                # 代码检查
+</span></span><span class=line><span class=cl>├── .prettierrc              # 代码格式化
+</span></span><span class=line><span class=cl>├── .env.example             # 环境变量模板
+</span></span><span class=line><span class=cl>├── .gitattributes           # Git 配置
+</span></span><span class=line><span class=cl>├── .gitmessage              # 提交信息模板
+</span></span><span class=line><span class=cl>├── docker-compose.yml       # 容器编排
+</span></span><span class=line><span class=cl>├── package.json             # 全局脚本
+</span></span><span class=line><span class=cl>├── CONTRIBUTING.md          # 贡献指南
+</span></span><span class=line><span class=cl>└── README.md                # 项目总览
+</span></span></code></pre></td></tr></table></div></div><p>采用前后端分离模式，前端基于 React+vite 生态，后端使用 NestJS 框架。前端的<code>src</code>目录中涵盖了从基础的 API 封装、静态资源管理，到复杂的组件库构建、状态管理以及国际化等功能模块。后端的<code>src</code>目录则包含了根模块、核心模块（如环境配置、异常处理）、数据库模块、用户模块示例以及通用工具等。合理的项目结构设计为后续的开发、测试、部署以及系统扩展都提供了坚实的基础，能够显著提升开发效率与代码的可维护性。</p><h2 id=-后端-mvp>🚀 后端 MVP</h2><p>在完成第一部分的项目初始化后，我们为全栈博客系统搭建起了初步框架，接下来便要进入后端的 MVP（最小可行产品）实现阶段，着手搭建后端基础项目结构，这是使后端服务能够正常运行并提供基础功能的关键一步。</p><h3 id=-核心配置>⚙️ 核心配置</h3><p>1️⃣ <strong>安装必要依赖</strong>：为了构建功能完备的后端服务，我们需要安装一系列必要的依赖包。</p><ul><li><code>@nestjs/mongoose</code>和<code>mongoose</code>用于连接和操作 MongoDB 数据库，这对于存储博客数据至关重要。</li><li><code>dotenv</code>能帮助我们加载环境变量，便于管理不同环境下的配置信息。</li><li><code>class-validator</code>和<code>class-transformer</code>用于数据验证和转换，保障数据的准确性和一致性。</li><li><code>@nestjs/config</code>用于管理应用的配置，<code>@nestjs/swagger</code>用于生成美观且实用的 API 文档，<code>@nestjs/passport</code>和<code>passport-jwt</code>则用于实现基于 JWT 的身份验证功能。</li><li>开发环境下，安装<code>@types/passport-jwt</code>以获取类型定义，方便 TypeScript 项目开发。</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>npm install @nestjs/mongoose mongoose dotenv class-validator class-transformer
+</span></span><span class=line><span class=cl>npm install @nestjs/config @nestjs/swagger @nestjs/passport passport-jwt
+</span></span><span class=line><span class=cl>npm install --save-dev @types/passport-jwt
+</span></span></code></pre></td></tr></table></div></div><p>2️⃣ <strong>环境变量配置 (.env)</strong>：合理配置环境变量能使我们的后端服务适应不同的运行环境。在<code>.env</code>文件中，我们设置了服务运行的端口<code>PORT</code>，这里默认设为<code>3000</code>。<code>MONGO_URI</code>用于指定 MongoDB 数据库的连接地址，需填入正确的数据库地址及相关认证信息。<code>JWT_SECRET</code>则是用于 JWT 身份验证的密钥，务必妥善保管，不要泄露。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-env data-lang=env><span class=line><span class=cl><span class=nv>PORT</span><span class=o>=</span><span class=m>3000</span>
+</span></span><span class=line><span class=cl><span class=nv>MONGO_URI</span><span class=o>=</span>mongodb://tacticore:pwd_tacticore@mongo:27017/tacticore?authSource<span class=o>=</span>admin
+</span></span><span class=line><span class=cl><span class=nv>JWT_SECRET</span><span class=o>=</span>your_jwt_secret_here
+</span></span></code></pre></td></tr></table></div></div><h3 id=-实现核心模块>🧩 实现核心模块</h3><ol><li><p><strong>创建基础模块结构</strong>：利用 Nest CLI 工具，我们可以快速创建基础模块结构。<code>nest generate module core/config</code>用于创建配置模块，管理应用的各种配置信息；<code>nest generate module database</code>创建数据库模块，负责与数据库的连接和交互；<code>nest generate controller health</code>则创建了健康检查控制器，用于监控后端服务的运行状态。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>nest generate module core/config
+</span></span><span class=line><span class=cl>nest generate module database
+</span></span><span class=line><span class=cl>nest generate controller health
+</span></span></code></pre></td></tr></table></div></div></li><li><p><strong>配置模块 (src/core/config/config.module.ts)</strong>：在配置模块中，我们引入了<code>@nestjs/config</code>模块，并使用<code>Joi</code>库对环境变量进行验证。<code>Joi</code>是一个流行的 JavaScript 数据验证库，在 NestJS 中常与<code>@nestjs/config</code>结合使用。首先需要安装<code>joi</code>及其类型定义（TypeScript 项目需要）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>npm install joi @types/joi
+</span></span></code></pre></td></tr></table></div></div><p>安装完成后，在配置模块中引入并定义验证规则：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// src/config/config.module.ts
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>import</span> <span class=p>{</span> <span class=nx>Module</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;@nestjs/common&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>ConfigModule</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;@nestjs/config&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=o>*</span> <span class=kr>as</span> <span class=nx>Joi</span> <span class=kr>from</span> <span class=s2>&#34;joi&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>@Module</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>imports</span><span class=o>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nx>ConfigModule</span><span class=p>.</span><span class=nx>forRoot</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>isGlobal</span>: <span class=kt>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>envFilePath</span><span class=o>:</span> <span class=s2>&#34;.env&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>validationSchema</span>: <span class=kt>Joi.object</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>        <span class=nx>PORT</span>: <span class=kt>Joi.number</span><span class=p>().</span><span class=k>default</span><span class=p>(</span><span class=mi>3000</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=nx>MONGO_URI</span>: <span class=kt>Joi.string</span><span class=p>().</span><span class=nx>required</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=nx>JWT_SECRET</span>: <span class=kt>Joi.string</span><span class=p>().</span><span class=nx>min</span><span class=p>(</span><span class=mi>16</span><span class=p>).</span><span class=nx>required</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>        <span class=nx>NODE_ENV</span>: <span class=kt>Joi.string</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>          <span class=p>.</span><span class=nx>valid</span><span class=p>(</span><span class=s2>&#34;development&#34;</span><span class=p>,</span> <span class=s2>&#34;production&#34;</span><span class=p>,</span> <span class=s2>&#34;test&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>          <span class=p>.</span><span class=k>default</span><span class=p>(</span><span class=s2>&#34;development&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>      <span class=p>}),</span>
+</span></span><span class=line><span class=cl>      <span class=nx>validationOptions</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>allowUnknown</span>: <span class=kt>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nx>abortEarly</span>: <span class=kt>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nx>exports</span><span class=o>:</span> <span class=p>[</span><span class=nx>ConfigModule</span><span class=p>],</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>ConfigurationModule</span> <span class=p>{}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里的验证规则如下：</p><ul><li><code>Joi.number().default(3000)</code>：表示<code>PORT</code>必须是数字，默认值为<code>3000</code>。</li><li><code>Joi.string().required()</code>：说明<code>MONGO_URI</code>是必填的字符串。</li><li><code>Joi.string().min(16)</code>：要求<code>JWT_SECRET</code>是最小长度为<code>16</code>的字符串。</li><li><code>Joi.string().valid(...)</code>：限定<code>NODE_ENV</code>只能是<code>development</code>、<code>production</code>、<code>test</code>中的一个，默认值为<code>development</code>。
+如果<code>.env</code>文件缺少<code>MONGO_URI</code>或<code>JWT_SECRET</code>等必填项，启动时就会报错，例如：</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>Error: Config validation error: &#34;MONGO_URI&#34; is required
+</span></span></code></pre></td></tr></table></div></div></li><li><p><strong>数据库模块 (src/database/database.module.ts)</strong>：数据库模块负责连接到 MongoDB 数据库。通过<code>MongooseModule.forRootAsync</code>方法，我们可以在运行时动态配置数据库连接字符串，这里从环境变量<code>process.env.MONGO_URI</code>中获取连接地址。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>Module</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;@nestjs/common&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>MongooseModule</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;@nestjs/mongoose&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>@Module</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>imports</span><span class=o>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nx>MongooseModule</span><span class=p>.</span><span class=nx>forRootAsync</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>useFactory</span><span class=o>:</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>        <span class=nx>uri</span>: <span class=kt>process.env.MONGO_URI</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=p>}),</span>
+</span></span><span class=line><span class=cl>    <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>DatabaseModule</span> <span class=p>{}</span>
+</span></span></code></pre></td></tr></table></div></div></li></ol><h3 id=-健康检查端点-srchealthhealthcontrollerts>🩺 健康检查端点 (src/health/health.controller.ts)</h3><ol><li><p><strong>健康检查端点</strong>：健康检查端点用于检查后端服务是否正常运行。通过<code>@Controller('health')</code>装饰器定义了控制器的路由前缀为<code>health</code>。<code>@Get()</code>装饰器表示该方法处理 HTTP GET 请求，<code>@ApiOperation</code>和<code>@ApiResponse</code>装饰器用于在 Swagger 文档中描述该接口的功能和响应信息。当访问<code>/health</code>端点时，会返回服务的状态和当前时间戳。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>Controller</span><span class=p>,</span> <span class=nx>Get</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;@nestjs/common&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>ApiOperation</span><span class=p>,</span> <span class=nx>ApiResponse</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;@nestjs/swagger&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>@Controller</span><span class=p>(</span><span class=s2>&#34;health&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>HealthController</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@Get</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiOperation</span><span class=p>({</span> <span class=nx>summary</span><span class=o>:</span> <span class=s2>&#34;服务健康检查&#34;</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiResponse</span><span class=p>({</span> <span class=nx>status</span>: <span class=kt>200</span><span class=p>,</span> <span class=nx>description</span><span class=o>:</span> <span class=s2>&#34;服务运行正常&#34;</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=nx>checkHealth() {</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>status</span><span class=o>:</span> <span class=s2>&#34;UP&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>timestamp</span>: <span class=kt>new</span> <span class=nb>Date</span><span class=p>().</span><span class=nx>toISOString</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div></li></ol><h3 id=-调整入口文件-srcmaints>🔧 调整入口文件 (src/main.ts)</h3><p>在入口文件<code>src/main.ts</code>中，我们创建了 Nest 应用实例，并使用<code>app.useGlobalPipes</code>方法启用了全局验证管道。该管道配置了<code>whitelist: true</code>，表示只接受验证通过的属性，<code>forbidNonWhitelisted: true</code>则禁止接受未通过验证的属性，从而确保输入数据的合法性。最后，应用监听指定端口，并在控制台输出应用运行的地址。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>NestFactory</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;@nestjs/core&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>AppModule</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;./app.module&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>ValidationPipe</span> <span class=p>}</span> <span class=kr>from</span> <span class=s2>&#34;@nestjs/common&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>async</span> <span class=kd>function</span> <span class=nx>bootstrap() {</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>app</span> <span class=o>=</span> <span class=k>await</span> <span class=nx>NestFactory</span><span class=p>.</span><span class=nx>create</span><span class=p>(</span><span class=nx>AppModule</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 全局验证管道
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>app</span><span class=p>.</span><span class=nx>useGlobalPipes</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=k>new</span> <span class=nx>ValidationPipe</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>whitelist</span>: <span class=kt>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>forbidNonWhitelisted</span>: <span class=kt>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>await</span> <span class=nx>app</span><span class=p>.</span><span class=nx>listen</span><span class=p>(</span><span class=nx>process</span><span class=p>.</span><span class=nx>env</span><span class=p>.</span><span class=nx>PORT</span> <span class=o>||</span> <span class=mi>3000</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=sb>`Application running on: </span><span class=si>${</span><span class=k>await</span> <span class=nx>app</span><span class=p>.</span><span class=nx>getUrl</span><span class=p>()</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nx>bootstrap</span><span class=p>();</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=-验证步骤>✅ 验证步骤</h3><p>完成上述配置后，我们可以通过以下方式验证后端服务是否正常运行：</p><ol><li><strong>运行测试</strong>：执行<code>npm run test</code>命令，运行项目中的测试用例，确保各个模块的功能符合预期。</li><li><strong>启动开发模式</strong>：使用<code>npm run start:dev</code>命令，以开发模式启动后端服务，便于在开发过程中实时查看代码变更带来的效果。</li><li><strong>验证端点</strong>：通过<code>curl http://localhost:3000/health</code>命令，向健康检查端点发送请求，验证服务是否正常运行。如果服务正常，将返回类似如下的结果：</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;status&#34;</span><span class=p>:</span> <span class=s2>&#34;UP&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;timestamp&#34;</span><span class=p>:</span> <span class=s2>&#34;2025-04-11T12:00:00.000Z&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=-推荐工具链>🛠️ 推荐工具链</h3><p>为了进一步提升后端开发效率和服务质量，我们可以引入一些工具：</p><div class=table-wrapper><table><thead><tr><th>工具</th><th>用途</th><th>安装命令</th></tr></thead><tbody><tr><td>NestJS Swagger</td><td>API 文档生成</td><td><code>npm install @nestjs/swagger</code></td></tr><tr><td>NestJS CQRS</td><td>复杂业务逻辑管理</td><td><code>npm install @nestjs/cqrs</code></td></tr><tr><td>NestJS Cache</td><td>缓存管理</td><td><code>npm install @nestjs/cache-manager</code></td></tr><tr><td>Jest</td><td>单元测试</td><td>内置</td></tr><tr><td>Compodoc</td><td>项目文档生成</td><td><code>npm install @compodoc/compodoc</code></td></tr></tbody></table></div><p>NestJS Swagger 可以自动生成详细的 API 文档，方便团队协作和接口调试；NestJS CQRS 有助于管理复杂的业务逻辑；NestJS Cache 用于缓存频繁访问的数据，提高系统性能；Jest 作为内置的单元测试框架，能够保证代码质量；Compodoc 则可以生成全面的项目文档，方便团队成员了解项目结构和功能。</p><p>通过以上步骤，我们初步完成了后端的 MVP 实现，搭建起了基础项目结构，为后续添加更多业务功能奠定了坚实基础。</p><h2 id=-容器化部署>🐳 容器化部署</h2><p>在完成第二部分后端基础项目结构搭建后，为了实现项目的容器化部署，便于在不同环境中快速、稳定地运行，接下来我们将深入探讨 Docker 配置相关内容。Docker 能够将应用及其依赖打包成一个独立的镜像，确保在任何环境中都能以相同的方式运行，大大提升了项目部署的效率和一致性。</p><h3 id=-文件结构预览>📁 文件结构预览</h3><p>根据项目结构规划，Docker 相关配置主要分布在以下位置：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>TactiCore/
+</span></span><span class=line><span class=cl>├── infra/
+</span></span><span class=line><span class=cl>│   ├── docker/
+</span></span><span class=line><span class=cl>│   │   ├── nginx/
+</span></span><span class=line><span class=cl>│   │   │   ├── nginx.conf          # Nginx 主配置
+</span></span><span class=line><span class=cl>│   │   │   └── tacticore.conf      # 项目专用配置
+</span></span><span class=line><span class=cl>│   │   └── mongo/
+</span></span><span class=line><span class=cl>│   │       └── init-mongo.js       # MongoDB 初始化脚本
+</span></span><span class=line><span class=cl>├── docker-compose.yml               # 主编排文件
+</span></span><span class=line><span class=cl>├── frontend/
+</span></span><span class=line><span class=cl>|       ├── Dockerfile.prod                # 前端镜像配置
+</span></span><span class=line><span class=cl>|       └── Dockerfile.dev
+</span></span><span class=line><span class=cl>└── backend/
+</span></span><span class=line><span class=cl>        ├── Dockerfile.prod                # 后端镜像配置
+</span></span><span class=line><span class=cl>        └──Dockerfile.dev
+</span></span></code></pre></td></tr></table></div></div><p>下面我们详细介绍具体的配置步骤：</p><h3 id=-前端镜像配置-frontenddockerfileprod>🖥️ 前端镜像配置 (frontend/Dockerfile.prod)</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=line><span class=cl><span class=c># frontend/Dockerfile.prod</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># ================= 构建阶段 =================</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine AS builder</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> frontend/package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm ci<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> frontend/ .<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm run build<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># ================= 生产阶段 =================</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> nginx:alpine AS prod</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>builder /app/dist /usr/share/nginx/html<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> infra/docker/nginx/tacticore.conf /etc/nginx/conf.d/default.conf<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>EXPOSE</span><span class=s> 80</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;nginx&#34;</span><span class=p>,</span> <span class=s2>&#34;-g&#34;</span><span class=p>,</span> <span class=s2>&#34;daemon off;&#34;</span><span class=p>]</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><ol><li><strong>构建阶段</strong>：基于<code>node:22-alpine</code>镜像创建一个名为<code>builder</code>的构建阶段。设置工作目录为<code>/app</code>，将前端项目的<code>package*.json</code>文件复制到容器内，执行<code>npm ci</code>安装依赖。这里使用<code>npm ci</code>而非<code>npm install</code>，<code>npm ci</code>是专门为自动化环境设计的依赖安装命令，它严格按照<code>package-lock.json</code>的版本安装依赖，不修改任何文件，能确保生产环境与开发环境的依赖完全一致，避免“在我机器上是好的”问题，同时显著加快 Docker 镜像构建速度。接着将整个前端项目复制到容器内，并执行<code>npm run build</code>进行项目构建。</li><li><strong>生产阶段</strong>：基于<code>nginx:alpine</code>镜像创建生产阶段。从<code>builder</code>阶段复制编译好的前端文件到<code>/usr/share/nginx/html</code>目录，这是 Nginx 默认的静态资源目录。同时，将项目自定义的 Nginx 配置文件<code>infra/docker/nginx/tacticore.conf</code>复制到<code>/etc/nginx/conf.d/default.conf</code>，覆盖默认的 Nginx 配置。通过<code>EXPOSE 80</code>声明容器监听端口为 80，最后使用<code>CMD ["nginx", "-g", "daemon off;"]</code>以前台模式启动 Nginx 服务，确保 Docker 容器运行时 Nginx 服务处于运行状态。</li></ol><h3 id=-后端镜像配置-backenddockerfileprod>🗄️ 后端镜像配置 (backend/Dockerfile.prod)</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=line><span class=cl><span class=c># 开发阶段</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine AS development</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm ci<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> . .<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm run build<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># 生产阶段</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine AS production</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>development /app/dist ./dist<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>development /app/package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm ci --production<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;node&#34;</span><span class=p>,</span> <span class=s2>&#34;dist/main.js&#34;</span><span class=p>]</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><ol><li><strong>开发阶段</strong>：基于<code>node:22-alpine</code>镜像创建名为<code>development</code>的开发阶段。设置工作目录为<code>/app</code>，复制后端项目的<code>package*.json</code>文件，执行<code>npm ci</code>安装依赖，再将整个后端项目复制到容器内，并执行<code>npm run build</code>进行项目构建。</li><li><strong>生产阶段</strong>：同样基于<code>node:22-alpine</code>镜像创建<code>production</code>阶段。从<code>development</code>阶段复制编译后的文件到<code>/app/dist</code>目录，同时复制<code>package*.json</code>文件。执行<code>npm ci --production</code>安装生产环境所需的依赖，这里<code>--production</code>参数会跳过安装<code>devDependencies</code>。最后通过<code>CMD ["node", "dist/main.js"]</code>启动后端服务。</li></ol><h3 id=-数据库初始化-infradockermongoinit-mongojs>🧩 数据库初始化 (infra/docker/mongo/init-mongo.js)</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// ==================== 安全增强 ====================
+</span></span></span><span class=line><span class=cl><span class=c1>// 1. 切换到目标数据库（显式创建数据库）
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>db</span> <span class=o>=</span> <span class=nx>db</span><span class=p>.</span><span class=nx>getSiblingDB</span><span class=p>(</span><span class=s2>&#34;tacticore&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 2. 创建专用用户
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>db</span><span class=p>.</span><span class=nx>createUser</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>user</span><span class=o>:</span> <span class=s2>&#34;tacticore&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>pwd</span><span class=o>:</span> <span class=s2>&#34;pwd-tacticore&#34;</span><span class=p>,</span> <span class=c1>// 生产环境应从环境变量获取
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>roles</span><span class=o>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span> <span class=nx>role</span><span class=o>:</span> <span class=s2>&#34;readWrite&#34;</span><span class=p>,</span> <span class=nx>db</span><span class=o>:</span> <span class=s2>&#34;tacticore&#34;</span> <span class=p>},</span> <span class=c1>// 应用数据库权限
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>{</span> <span class=nx>role</span><span class=o>:</span> <span class=s2>&#34;clusterMonitor&#34;</span><span class=p>,</span> <span class=nx>db</span><span class=o>:</span> <span class=s2>&#34;admin&#34;</span> <span class=p>},</span> <span class=c1>// 监控权限（可选）
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>],</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 3. 创建初始集合（可选）
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>db</span><span class=p>.</span><span class=nx>createCollection</span><span class=p>(</span><span class=s2>&#34;users&#34;</span><span class=p>,</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>validator</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>$jsonSchema</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>bsonType</span><span class=o>:</span> <span class=s2>&#34;object&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>required</span><span class=o>:</span> <span class=p>[</span><span class=s2>&#34;username&#34;</span><span class=p>,</span> <span class=s2>&#34;email&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>      <span class=nx>properties</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>username</span><span class=o>:</span> <span class=p>{</span> <span class=nx>bsonType</span><span class=o>:</span> <span class=s2>&#34;string&#34;</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>        <span class=nx>email</span><span class=o>:</span> <span class=p>{</span> <span class=nx>bsonType</span><span class=o>:</span> <span class=s2>&#34;string&#34;</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 4. 创建索引（可选）
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>db</span><span class=p>.</span><span class=nx>users</span><span class=p>.</span><span class=nx>createIndex</span><span class=p>({</span> <span class=nx>email</span><span class=o>:</span> <span class=mi>1</span> <span class=p>},</span> <span class=p>{</span> <span class=nx>unique</span><span class=o>:</span> <span class=kc>true</span> <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 5. 插入初始数据（可选）
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>db</span><span class=p>.</span><span class=nx>users</span><span class=p>.</span><span class=nx>insertOne</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>username</span><span class=o>:</span> <span class=s2>&#34;admin&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>email</span><span class=o>:</span> <span class=s2>&#34;admin@tacticore.com&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>createdAt</span><span class=o>:</span> <span class=k>new</span> <span class=nb>Date</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 6. 验证结果（调试用）
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>print</span><span class=p>(</span><span class=s2>&#34;========== 初始化完成 ==========&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>printjson</span><span class=p>(</span><span class=nx>db</span><span class=p>.</span><span class=nx>getUsers</span><span class=p>());</span>
+</span></span></code></pre></td></tr></table></div></div><p>在这个脚本中，首先切换到目标数据库<code>tacticore</code>，若数据库不存在则会自动创建。然后创建一个专用用户<code>tacticore</code>，并赋予其在<code>tacticore</code>数据库的读写权限以及在<code>admin</code>数据库的监控权限（可选）。接着可以根据项目需求创建初始集合<code>users</code>，并定义集合的数据校验规则，要求<code>username</code>和<code>email</code>字段为必填，且类型为字符串。为<code>email</code>字段创建唯一索引，确保<code>email</code>的唯一性。还可以插入一条初始数据用于测试。最后输出初始化完成的信息，并打印当前用户列表用于调试。在生产环境中，密码应从环境变量获取，以提高安全性。</p><h3 id=-nginx-配置-infradockernginxtacticoreconf>🌐 Nginx 配置 (infra/docker/nginx/tacticore.conf)</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-nginx data-lang=nginx><span class=line><span class=cl><span class=k>server</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kn>listen</span> <span class=mi>80</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kn>server_name</span> <span class=s>localhost</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 前端路由处理
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kn>location</span> <span class=s>/</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kn>root</span> <span class=s>/usr/share/nginx/html</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=kn>try_files</span> <span class=nv>$uri</span> <span class=nv>$uri/</span> <span class=s>/index.html</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 后端代理
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=kn>location</span> <span class=s>/api/</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kn>proxy_pass</span> <span class=s>http://backend:3000</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=kn>proxy_set_header</span> <span class=s>Host</span> <span class=nv>$host</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=kn>proxy_set_header</span> <span class=s>X-Real-IP</span> <span class=nv>$remote_addr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Nginx 在项目中承担着重要角色。通过这个配置文件，Nginx 监听端口 80。在前端路由处理方面，当用户访问根路径时，Nginx 会从<code>/usr/share/nginx/html</code>目录查找对应的文件或目录，若未找到则返回<code>index.html</code>，这对于单页应用（SPA）的路由处理非常关键。在后端代理方面，当接收到以<code>/api/</code>开头的请求时，Nginx 会将请求转发到<code>http://backend:3000</code>，同时设置<code>Host</code>和<code>X-Real-IP</code>头部信息，隐藏后端真实端口和细节，增强安全性。</p><h3 id=-docker-compose-编排>🎛 docker-compose 编排</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>frontend</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>dockerfile</span><span class=p>:</span><span class=w> </span><span class=l>frontend/Dockerfile.prod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>target</span><span class=p>:</span><span class=w> </span><span class=l>prod</span><span class=w> </span><span class=c># 默认生产环境</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;8080:80&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>backend</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>backend</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>./backend</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>dockerfile</span><span class=p>:</span><span class=w> </span><span class=l>Dockerfile.prod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>env_file</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./backend/.env</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>NODE_ENV=production</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./backend/.env:/app/.env</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>mongo</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;3000:3000&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>mongo</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>mongo:6</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>mongo_data:/data/db</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./infra/docker/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>MONGO_INITDB_ROOT_USERNAME=root</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>MONGO_INITDB_ROOT_PASSWORD=rootpassword123</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;27017:27017&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>mongo_data</span><span class=p>:</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p><code>docker-compose.yml</code>用于编排多个 Docker 容器服务。这里定义了三个服务：</p><ol><li><strong>frontend</strong>：基于前端项目根目录构建镜像，使用<code>frontend/Dockerfile.prod</code>，目标为生产环境。将容器的 80 端口映射到主机的 8080 端口，并且依赖<code>backend</code>服务，确保<code>backend</code>服务先启动。</li><li><strong>backend</strong>：基于后端项目目录构建镜像，使用<code>backend/Dockerfile.prod</code>。通过<code>env_file</code>加载<code>./backend/.env</code>文件中的环境变量，设置<code>NODE_ENV</code>为<code>production</code>。将主机的<code>./backend/.env</code>文件挂载到容器内的<code>/app/.env</code>，实现环境变量的同步。依赖<code>mongo</code>服务，确保<code>mongo</code>服务先启动。将容器的 3000 端口映射到主机的 3000 端口。</li><li><strong>mongo</strong>：使用<code>mongo:6</code>官方镜像。将<code>mongo_data</code>卷挂载到容器内的<code>/data/db</code>目录，用于持久化存储 MongoDB 数据。将<code>./infra/docker/mongo/init-mongo.js</code>文件只读挂载到<code>/docker-entrypoint-initdb.d/init-mongo.js</code>，在容器启动时会自动执行该脚本进行 MongoDB 的初始化。设置<code>MONGO_INITDB_ROOT_USERNAME</code>和<code>MONGO_INITDB_ROOT_PASSWORD</code>环境变量，用于初始化 MongoDB 的 root 用户。将容器的 27017 端口映射到主机的 27017 端口。</li></ol><h3 id=-启动命令>🚀 启动命令</h3><p>完成上述配置后，可以使用以下命令启动项目：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 构建并启动所有服务</span>
+</span></span><span class=line><span class=cl>docker-compose up --build
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 访问前端</span>
+</span></span><span class=line><span class=cl>http://localhost:8080
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 验证服务</span>
+</span></span><span class=line><span class=cl>docker-compose ps
+</span></span></code></pre></td></tr></table></div></div><p><code>docker-compose up --build</code>命令会构建所有服务的镜像并启动容器。构建过程中会根据各个<code>Dockerfile</code>的配置进行操作。构建完成后，前端服务可通过<code>http://localhost:8080</code>访问。<code>docker-compose ps</code>命令用于查看当前正在运行的容器服务状态，确保各个服务正常启动。</p><p>通过以上详细的 Docker 配置，我们能够将全栈博客系统的前端、后端以及数据库服务以容器化的方式进行部署和管理，为项目的稳定运行和后续扩展提供有力支持。</p><h2 id=-docker-热更新>⚡ Docker 热更新</h2><p>在完成第三部分的 Docker 配置后，项目已经可以以容器化的方式稳定部署和运行。但在开发过程中，频繁修改代码后都重新构建和启动容器会极大地降低开发效率。因此，为了提升开发体验，接下来我们将实现 Docker 热重载，这样在修改代码后，无需重启容器就能实时看到代码变更的效果。</p><h3 id=-前端热更新实现方案>🖥️ 前端热更新实现方案</h3><h4 id=调整前端-dockerfile>调整前端 Dockerfile</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=line><span class=cl><span class=c># frontend/Dockerfile.dev</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># ================= 开发阶段 =================</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine AS dev</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> frontend/package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm install<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>EXPOSE</span><span class=s> 5173</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;npm&#34;</span><span class=p>,</span> <span class=s2>&#34;run&#34;</span><span class=p>,</span> <span class=s2>&#34;dev&#34;</span><span class=p>]</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>这里创建了一个专门用于开发环境的 <code>Dockerfile.dev</code>。基于<code>node:22-alpine</code>镜像，设置工作目录为<code>/app</code>，复制前端项目的<code>package*.json</code>文件并执行<code>npm install</code>安装依赖。暴露端口 5173，这是 Vite 开发服务器默认的端口。最后启动 Vite 开发服务器。</p><h4 id=添加-docker-composedevyml>添加 docker-compose.dev.yml</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>frontend</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>dockerfile</span><span class=p>:</span><span class=w> </span><span class=l>frontend/Dockerfile.dev</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>target</span><span class=p>:</span><span class=w> </span><span class=l>dev</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./frontend:/app</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/app/node_modules</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;5173:5173&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>NODE_ENV=development</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>在<code>docker-compose.dev.yml</code>中，定义了前端服务在开发环境下的配置。通过<code>volumes</code>将本地的<code>./frontend</code>目录挂载到容器内的<code>/app</code>目录，实现代码的实时同步。同时，使用<code>/app/node_modules</code>防止本地的<code>node_modules</code>覆盖容器内的依赖。将容器的 5173 端口映射到主机的 5173 端口，方便在本地访问开发服务器。设置环境变量<code>NODE_ENV</code>为<code>development</code>。</p><h4 id=配置-vite-开发服务器>配置 Vite 开发服务器</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// frontend/vite.config.ts
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=k>default</span> <span class=nx>defineConfig</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>server</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>host</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span> <span class=c1>// 允许外部访问
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>port</span><span class=o>:</span> <span class=mi>5173</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>watch</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>usePolling</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span> <span class=c1>// 解决容器内文件监听问题
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span></code></pre></td></tr></table></div></div><p>在 Vite 配置文件中，设置<code>host: true</code>允许外部访问开发服务器，<code>port: 5173</code>指定开发服务器的端口。<code>watch.usePolling: true</code>解决了在 Docker 容器内文件监听失效的问题，通过轮询的方式检测文件变化。</p><h3 id=-前端热更新工作原理>🔄 前端热更新工作原理</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>sequenceDiagram
+</span></span><span class=line><span class=cl>    participant 本地编辑器
+</span></span><span class=line><span class=cl>    participant Docker容器
+</span></span><span class=line><span class=cl>    participant 浏览器
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    本地编辑器-&gt;&gt;Docker容器: 修改代码文件
+</span></span><span class=line><span class=cl>    Docker容器-&gt;&gt;Vite服务器: 检测文件变化
+</span></span><span class=line><span class=cl>    Vite服务器-&gt;&gt;Vite服务器: 增量编译
+</span></span><span class=line><span class=cl>    Vite服务器-&gt;&gt;浏览器: 通过 WebSocket 推送更新
+</span></span><span class=line><span class=cl>    浏览器-&gt;&gt;浏览器: 自动刷新页面
+</span></span></code></pre></td></tr></table></div></div><p>当在本地编辑器修改代码文件后，由于<code>volumes</code>的挂载，容器内的代码也会实时更新。Vite 服务器检测到文件变化后进行增量编译，然后通过 WebSocket 将更新推送给浏览器，浏览器自动刷新页面，无需手动操作。</p><h3 id=-前端热更新验证>✅ 前端热更新验证</h3><ol><li><p><strong>启动开发环境</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>docker-compose up frontend
+</span></span></code></pre></td></tr></table></div></div></li><li><p><strong>修改前端代码</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// frontend/src/App.tsx
+</span></span></span><span class=line><span class=cl><span class=c1>// 随便修改一些地方
+</span></span></span></code></pre></td></tr></table></div></div></li><li><p><strong>观察控制台输出</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>[vite] page reload src/App.tsx
+</span></span></code></pre></td></tr></table></div></div></li><li><p><strong>浏览器自动刷新</strong>
+无需手动操作，页面将自动更新</p></li></ol><h3 id=-后端热重载完整解决方案>🗄️ 后端热重载完整解决方案</h3><h4 id=拆分后端-dockerfile>拆分后端 Dockerfile</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=line><span class=cl><span class=c># backend/Dockerfile.dev</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine AS development</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># 安装开发依赖</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm install -g nodemon<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm ci<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> . .<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># 启动开发服务器</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;npm&#34;</span><span class=p>,</span> <span class=s2>&#34;run&#34;</span><span class=p>,</span> <span class=s2>&#34;start:dev:docker&#34;</span><span class=p>]</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=line><span class=cl><span class=c># backend/Dockerfile.prod</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># Stage 1: Build</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine AS builder</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm ci<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> . .<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm run build<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># Stage 2: Production</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>builder /app/dist ./dist<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>builder /app/package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm ci --production<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;node&#34;</span><span class=p>,</span> <span class=s2>&#34;dist/main.js&#34;</span><span class=p>]</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>将后端的 Dockerfile 拆分为开发环境和生产环境两个文件。在开发环境的 Dockerfile 中，安装<code>nodemon</code>用于文件监控和热重载，复制项目文件并安装依赖，最后启动开发服务器。生产环境的 Dockerfile 则先进行代码构建，然后将构建后的文件复制到生产环境镜像中，只安装生产环境所需的依赖。</p><h4 id=调整-docker-compose-配置>调整 docker-compose 配置</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=c># docker-compose.yml (生产配置)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>backend</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>./backend</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>dockerfile</span><span class=p>:</span><span class=w> </span><span class=l>Dockerfile.prod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>env_file</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./backend/.env</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>NODE_ENV=production</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./backend/.env:/app/.env</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>mongo</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;3000:3000&#34;</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=c># docker-compose.dev.yml (开发配置)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>backend</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>./backend</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>dockerfile</span><span class=p>:</span><span class=w> </span><span class=l>Dockerfile.dev</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./backend:/app</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/app/node_modules</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;3000:3000&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>NODE_ENV=development</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>在<code>docker-compose.yml</code>中配置生产环境的后端服务，使用<code>Dockerfile.prod</code>进行构建。在<code>docker-compose.dev.yml</code>中配置开发环境的后端服务，使用<code>Dockerfile.dev</code>进行构建，通过<code>volumes</code>实现代码实时同步，防止覆盖容器内的依赖。</p><h4 id=nodemon-配置>nodemon 配置</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=c1>// backend/package.json
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;scripts&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;start:dev:docker&#34;</span><span class=p>:</span> <span class=s2>&#34;nodemon --legacy-watch src/main.ts&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;devDependencies&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//版本供参考
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nt>&#34;@types/nodemon&#34;</span><span class=p>:</span> <span class=s2>&#34;^1.19.5&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;nodemon&#34;</span><span class=p>:</span> <span class=s2>&#34;^3.1.0&#34;</span><span class=p>,</span> <span class=c1>// 新增热重载工具
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nt>&#34;ts-node&#34;</span><span class=p>:</span> <span class=s2>&#34;^10.9.2&#34;</span> <span class=c1>// 明确 TS 运行时版本
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=c1>// backend/nodemon.json
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;watch&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;src&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;ext&#34;</span><span class=p>:</span> <span class=s2>&#34;ts,json&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;ignore&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;src/**/*.spec.ts&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;exec&#34;</span><span class=p>:</span> <span class=s2>&#34;ts-node src/main.ts&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;legacyWatch&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;delay&#34;</span><span class=p>:</span> <span class=s2>&#34;1&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>在<code>package.json</code>中添加<code>start:dev:docker</code>脚本，使用<code>nodemon</code>监控<code>src</code>目录下的文件变化。在<code>nodemon.json</code>中配置监控的目录、文件类型、忽略的文件等，使用<code>ts-node</code>直接运行 TypeScript 文件。</p><h3 id=-后端热重载验证>✅ 后端热重载验证</h3><ol><li><p><strong>修改后端代码</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// backend/src/main.ts
+</span></span></span><span class=line><span class=cl><span class=c1>// 随便修改
+</span></span></span></code></pre></td></tr></table></div></div></li><li><p><strong>观察容器日志</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>[nodemon] restarting due to changes...
+</span></span><span class=line><span class=cl>Server running on http://localhost:3000
+</span></span></code></pre></td></tr></table></div></div></li><li><p><strong>API 测试</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>curl http://localhost:3000/health
+</span></span></code></pre></td></tr></table></div></div></li></ol><h3 id=-一键启动方案>🚀 一键启动方案</h3><h4 id=生产环境>生产环境</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>docker-compose -f docker-compose.yml up --build
+</span></span></code></pre></td></tr></table></div></div><h4 id=开发环境完整热更新>开发环境（完整热更新）</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+</span></span></code></pre></td></tr></table></div></div><p>在主目录下创建批处理文件<code>dev-up.bat</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-batch data-lang=batch><span class=line><span class=cl><span class=p>@</span><span class=k>echo</span> off
+</span></span><span class=line><span class=cl>docker-compose -f docker-compose.yml -f docker-compose.dev.yml up <span class=nv>%*</span>
+</span></span></code></pre></td></tr></table></div></div><p>这个脚本可以方便地启动开发环境，将<code>docker-compose.yml</code>和<code>docker-compose.dev.yml</code>的配置合并使用。</p><p>通过以上前端和后端的热重载配置，我们在开发过程中可以极大地提高效率，实时看到代码修改的效果。同时，通过不同的 Dockerfile 和<code>docker-compose</code>配置，清晰地分离了开发环境和生产环境的配置，确保生产环境的稳定性和安全性。</p><h2 id=-问题与解决方案>🚨 问题与解决方案</h2><p>在完成前面的 Docker 配置及热重载设置后，在实际使用过程中可能会遇到一些问题。接下来将针对用户和密码管理、文件路径及环境变量加载等方面的常见问题进行分析，并给出相应的解决方案。</p><h3 id=-用户和密码管理问题>🔐 用户和密码管理问题</h3><h4 id=用户和密码定义关系>用户和密码定义关系</h4><p>用户和密码的创建涉及两个关键文件，它们有着不同的作用和配置方式。</p><ul><li><strong>Root 用户 (管理员)</strong>：在 <code>docker-compose.yml</code> 中定义，用于 MongoDB 实例的初始管理员账户，对整个 MongoDB 实例拥有完全控制权。</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>mongo</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=l>MONGO_INITDB_ROOT_USERNAME=root</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=l>MONGO_INITDB_ROOT_PASSWORD=rootpassword123</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><ul><li><strong>应用用户 (tacticore)</strong>：在 <code>init-mongo.js</code> 中定义，仅限特定数据库的操作权限。</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=nx>db</span><span class=p>.</span><span class=nx>createUser</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>user</span><span class=o>:</span> <span class=s2>&#34;tacticore&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>pwd</span><span class=o>:</span> <span class=s2>&#34;pwd-tacticore&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>roles</span><span class=o>:</span> <span class=p>[{</span> <span class=nx>role</span><span class=o>:</span> <span class=s2>&#34;readWrite&#34;</span><span class=p>,</span> <span class=nx>db</span><span class=o>:</span> <span class=s2>&#34;tacticore&#34;</span> <span class=p>}],</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li><strong>连接字符串 (MONGO_URI)</strong>：配置在 <code>.env</code> 或 <code>docker-compose.yml</code> 中，格式为 <code>mongodb://&lt;应用用户>:&lt;应用密码>@mongo:27017/&lt;数据库>?authSource=admin</code>。使用 <code>authSource=admin</code> 是因为 MongoDB 要求非 root 用户必须在 <code>admin</code> 数据库进行身份验证。</li></ul><h4 id=修改用户密码>修改用户密码</h4><ul><li><strong>修改 Root 用户</strong>：直接修改 <code>docker-compose.yml</code> 的环境变量。</li><li><strong>修改应用用户</strong>：更新 <code>init-mongo.js</code> 中的 <code>pwd</code> 字段，并重新初始化容器。</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>docker-compose down -v  <span class=c1># 删除数据卷</span>
+</span></span><span class=line><span class=cl>docker-compose up -d
+</span></span></code></pre></td></tr></table></div></div><h4 id=安全建议>安全建议</h4><ul><li><strong>生产环境</strong>：使用强密码生成器生成复杂密码，通过 Docker Secrets 管理密码（而非明文存储），定期轮换凭证。</li><li><strong>开发环境</strong>：在 <code>init-mongo.js</code> 中使用占位符，然后在 <code>docker-compose.yml</code> 中注入。</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// init-mongo.js 使用占位符
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>pwd</span><span class=o>:</span> <span class=nx>process</span><span class=p>.</span><span class=nx>env</span><span class=p>.</span><span class=nx>MONGO_APP_PASSWORD</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>mongo</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=l>MONGO_APP_PASSWORD=${MONGO_APP_PASSWORD}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=-docker-构建前端镜像时找不到-nginx-配置文件问题>📂 Docker 构建前端镜像时找不到 Nginx 配置文件问题</h3><h4 id=错误原因>错误原因</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>COPY infra/docker/nginx/tacticore.conf → 文件未找到
+</span></span></code></pre></td></tr></table></div></div><p>这是由于 Docker 构建上下文路径和文件引用路径不匹配。项目结构中，配置文件在 <code>infra</code> 目录，而 Dockerfile 在 <code>client</code> 目录。</p><h4 id=解决方案>解决方案</h4><p>在 <code>docker-compose.yml</code> 中指定正确的构建上下文。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>frontend</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>.</span><span class=w> </span><span class=c># 将构建上下文设为项目根目录</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>dockerfile</span><span class=p>:</span><span class=w> </span><span class=l>frontend/Dockerfile</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>关键原理是 Docker 只能访问 <code>context</code> 指定目录下的文件，所有 <code>COPY</code> 指令的路径都是相对于 <code>context</code> 目录的。</p><h3 id=-环境变量加载问题>📌 环境变量加载问题</h3><h4 id=docker-compose-的环境变量优先级问题>Docker Compose 的环境变量优先级问题</h4><p>在 <code>docker-compose.yml</code> 中同时使用了两种环境变量加载方式：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>env_file</span><span class=p>:</span><span class=w> </span><span class=l>./backend/.env</span><span class=w> </span><span class=c># 方式1：从文件加载</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>environment</span><span class=p>:</span><span class=w> </span><span class=c># 方式2：直接设置</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>MONGO_URI=${MONGO_URI}</span><span class=w> </span><span class=c># 引用宿主机环境变量</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>根据 Docker 的变量优先级规则，<code>environment</code> 直接定义的变量会覆盖 <code>env_file</code> 中的同名变量，<code>${VAR}</code> 语法会尝试读取宿主机环境变量（而非文件中的变量）。由于宿主机没有定义 <code>MONGO_URI</code> 环境变量，导致最终值为空字符串。</p><h4 id=解决方案-1>解决方案</h4><p>统一使用 <code>env_file</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-diff data-lang=diff><span class=line><span class=cl>services:
+</span></span><span class=line><span class=cl>  backend:
+</span></span><span class=line><span class=cl>    env_file:
+</span></span><span class=line><span class=cl>      - ./backend/.env
+</span></span><span class=line><span class=cl>    environment:
+</span></span><span class=line><span class=cl>      - NODE_ENV=production
+</span></span><span class=line><span class=cl><span class=gd>-     - MONGO_URI=${MONGO_URI}  # 删除此行
+</span></span></span><span class=line><span class=cl><span class=gd>-     - JWT_SECRET=${JWT_SECRET} # 删除此行
+</span></span></span></code></pre></td></tr></table></div></div><p>变量覆盖机制如下：</p><div class=table-wrapper><table><thead><tr><th>配置方式</th><th>优先级</th><th>适用场景</th></tr></thead><tbody><tr><td><code>environment</code></td><td>高</td><td>需要覆盖文件配置时</td></tr><tr><td><code>env_file</code></td><td>低</td><td>集中管理多个变量</td></tr></tbody></table></div><p>通过以上对常见问题的分析和解决方案，可以更好地应对 Docker 配置和使用过程中出现的状况，确保项目的稳定运行。</p></section><footer class=article-footer><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><script src=//unpkg.com/@waline/client@v2/dist/waline.js></script><link href=//unpkg.com/@waline/client@v2/dist/waline.css rel=stylesheet><div id=waline class=waline-container></div><style>.waline-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding);--waline-font-size:var(--article-font-size)}.waline-container .wl-count{color:var(--card-text-color-main)}</style><script>Waline.init({avatar:"",dark:'html[data-scheme="dark"]',el:"#waline",emoji:["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],lang:"zh-CN",locale:{admin:"Admin",placeholder:"说点啥~"},requiredMeta:["nick","mail","url"],serverURL:"comment.cycbloom.com"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2025 鎏金阁</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.30.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
