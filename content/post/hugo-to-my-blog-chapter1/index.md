@@ -949,3 +949,292 @@ services:
 | `env_file`    | 低     | 集中管理多个变量   |
 
 通过以上对常见问题的分析和解决方案，可以更好地应对 Docker 配置和使用过程中出现的状况，确保项目的稳定运行。
+
+## ⚙️ 通用配置
+
+在全栈博客系统的开发过程中，完成基础架构搭建、Docker 配置等核心部分后，一系列通用基础设施配置同样不容忽视，它们将为后续的高效开发与协作奠定坚实基础。以下详细介绍通用配置部分。
+
+### 🛠️ 统一编辑器规范（.editorconfig）
+
+通过.editorconfig 文件可以确保团队成员在不同编辑器下保持一致的代码风格。
+
+```ini
+# .editorconfig
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.json]
+indent_size = 2
+
+[Makefile]
+indent_style = tab
+```
+
+- `root = true`：标记此为根配置文件，编辑器将停止向上级目录搜索其他.editorconfig 文件，防止继承父目录配置导致规则冲突。其技术原理遵循就近原则，优先使用项目根目录配置。
+
+### 📝 Git 提交模板（.gitmessage）
+
+规范的 Git 提交信息有助于团队成员快速了解代码变更内容。
+
+```gitmessage
+# .gitmessage
+# Commit type:
+#   feat     - 新功能    - 用户注册功能
+#   fix      - Bug修复   - 登录页面表单验证错误
+#   docs     - 文档变更  - 更新API接口文档
+#   style    - 代码格式  - 调整代码缩进
+#   refactor - 代码重构  - 提出公共函数
+#   test     - 测试相关  - 添加单元测试
+#   perf     - 性能优化  - 优化性能
+#   chore    - 构建/依赖 - 更新依赖
+#   revert   - 回滚      - 回滚到上一个提交
+#   build    - 构建      - 添加构建脚本
+#   ci       - CI/CD     - 更新CI配置
+#   release  - 发布      - 发布新版本
+# --------------------
+# Scope (可选):
+#   frontend, backend, infra, docs, config
+#   作用域层级不超过2级（如feat(backend/login)）
+#   新模块首次提交使用feat(module): initialize
+# --------------------
+# Subject (必填):
+#   不超过50个字符，首字母小写，结尾不加句号
+# --------------------
+# Body (可选):
+#   详细描述修改内容
+#   使用祈使句（如"Add"而非"Added"）
+#   说明变更动机（Why > What）
+#   技术方案摘要（如有必要）
+# --------------------
+# Footer (可选):
+#   BREAKING CHANGE: 重大变更说明
+# --------------------
+# Issues (可选):
+#   Close #123, Fix #456
+
+{type}({scope}): {subject}
+
+[body]
+
+[footer]
+```
+
+- **配置生效步骤**：执行`git config commit.template .gitmessage`使配置生效。
+- **强制校验（推荐）**：
+
+  - 首先在项目根目录执行`npm install husky @commitlint/cli @commitlint/config-conventional --save-dev`。其中，`husky`是 Git hooks 管理工具，`@commitlint/cli`是提交信息校验命令行工具，`@commitlint/config-conventional`是社区标准校验规则。
+  - 接着执行`npx husky-init && npm install`初始化 husky 配置，此时会生成.husky 目录结构：
+
+    ```text
+    .husky/
+    ├── _
+    │   └── .gitignore
+    └── pre-commit
+    ```
+
+  - 在根目录创建配置文件.commitlintrc.json，内容如下：
+
+    ```json
+    {
+      "extends": ["@commitlint/config-conventional"],
+      "rules": {
+        "header-max-length": [2, "always", 100]
+      }
+    }
+    ```
+
+  - 最后在.husky/commit-msg 中添加`npx commitlint --edit $1`结合 Husky 使用。
+
+- **完整提交示例**：
+
+  ```text
+  feat(payment): 集成支付宝扫码支付
+
+  - 添加支付宝SDK初始化配置
+  - 实现扫码支付核心逻辑
+  - 增加支付结果回调处理
+
+  BREAKING CHANGE: 支付接口返回结构变更
+  Closes #112, #113
+  Refs: #98
+  ```
+
+- **常见问题排查**：
+
+  | 问题现象                   | 解决方案                                             |
+  | -------------------------- | ---------------------------------------------------- |
+  | `command not found: husky` | 重新执行`npm install husky --save-dev`               |
+  | 钩子未生效                 | 检查.husky 目录是否在.git 同级目录                   |
+  | Windows 权限问题           | 在 PowerShell 执行`Set-ExecutionPolicy RemoteSigned` |
+  | 需要跳过校验               | `git commit --no-verify` (慎用)                      |
+
+### 🔍 Git 属性配置（.gitattributes）
+
+.gitattributes 文件用于定义 Git 如何处理不同类型的文件。
+
+```text
+# .gitattributes
+* text=auto eol=lf
+
+*.sh text eol=lf
+
+*.md linguist-language=Markdown
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TSX
+
+package-lock.json binary
+yarn.lock binary
+```
+
+例如，`* text=auto eol=lf`表示自动检测文本文件，并将换行符设置为 LF；`package-lock.json binary`则将`package - lock.json`文件标记为二进制文件，避免在合并时出现不必要的冲突。
+
+### 🚨 基础 ESLint 配置（.eslintrc）
+
+ESLint 用于检查和规范代码质量。
+
+```json
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "react", "import"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always"
+      }
+    ]
+  }
+}
+```
+
+以`import/order`规则为例，它的作用是统一模块导入顺序。分组优先级如下：
+
+- `builtin`：Node.js 内置模块（如`path`）
+- `external`：`node_modules`依赖
+- `internal`：项目内部别名路径
+- `parent`：父目录引用
+- `sibling`：同级目录
+- `index`：目录索引文件
+  例如：
+
+```javascript
+// ✅ 正确顺序
+import path from "path"; // builtin
+import React from "react"; // external
+import Button from "@/components/Button"; // internal
+import utils from "../utils"; // parent
+import styles from "./styles.module.css"; // sibling
+```
+
+### 🎨 Prettier 格式化配置（.prettierrc）
+
+Prettier 用于代码格式化，保持代码风格一致。
+
+```json
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "endOfLine": "lf"
+}
+```
+
+例如，`printWidth`设置为 100，表示一行代码的最大宽度为 100 个字符；`singleQuote`设置为`true`表示使用单引号。
+
+### 🐶 Husky 提交规范（.husky/）
+
+Husky 可以在 Git 操作的特定阶段执行脚本，确保代码规范。在配置 Husky 时，lint:staged 发挥着重要作用。
+
+#### **安装依赖**
+
+```bash
+npm install lint-staged --save-dev
+# 安装ESLint依赖
+npm install eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin --save-dev
+# 在项目根目录执行
+npm install prettier --save-dev
+```
+
+#### **修改`package.json`**
+
+```json
+{
+  "scripts": {
+    "test": "echo \"Tests placeholder\"",
+    "lint:staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": ["eslint --fix", "prettier --write"]
+  }
+}
+```
+
+在此配置中，`lint-staged`定义了对暂存的特定文件（如`.js`、`.ts`、`.tsx`文件）执行`eslint --fix`进行代码检查和修复，以及`prettier --write`进行代码格式化。 3. **修改`.husky/pre-commit`**：
+
+```bash
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm run lint:staged
+```
+
+修改后，在每次执行`git commit`进行提交时，Husky 的`pre-commit`钩子会自动运行`npm run lint:staged`，对暂存文件进行预先检查和格式化，确保提交的代码符合团队设定的代码规范。
+
+整体来看，Husky 结合 lint:staged，能够在代码提交的关键节点，通过自动化的脚本执行，有效提升代码质量，减少因代码风格不一致等问题引发的潜在错误和沟通成本。
+
+### 🌱 基础环境模板（.env.example）
+
+.env.example 文件用于定义项目所需的环境变量模板，方便团队成员了解和配置环境。
+
+```env
+# 前端
+VITE_API_BASE_URL=http://localhost:4000/api/v1
+VITE_SENTRY_DSN=
+
+# 后端
+PORT=4000
+MONGO_URI=mongodb://mongo:27017/blog
+JWT_SECRET=change_this_in_production
+```
+
+例如，前端通过`VITE_API_BASE_URL`配置后端 API 的基础地址；后端通过`MONGO_URI`配置 MongoDB 的连接字符串。
+
+通过完成以上通用基础设施配置，能够极大提升团队协作效率，减少代码风格不一致、提交信息不规范等问题，为全栈博客系统的持续开发提供有力保障。
