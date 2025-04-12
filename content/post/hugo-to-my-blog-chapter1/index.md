@@ -1254,7 +1254,9 @@ npm install prettier --save-dev
 }
 ```
 
-在此配置中，`lint-staged`定义了对暂存的特定文件（如`.js`、`.ts`、`.tsx`文件）执行`eslint --fix`进行代码检查和修复，以及`prettier --write`进行代码格式化。 3. **修改`.husky/pre-commit`**：
+在此配置中，`lint-staged`定义了对暂存的特定文件（如`.js`、`.ts`、`.tsx`文件）执行`eslint --fix`进行代码检查和修复，以及`prettier --write`进行代码格式化。
+
+#### **修改`.husky/pre-commit`**
 
 ```bash
 #!/bin/sh
@@ -1284,4 +1286,41 @@ JWT_SECRET=change_this_in_production
 
 例如，前端通过`VITE_API_BASE_URL`配置后端 API 的基础地址；后端通过`MONGO_URI`配置 MongoDB 的连接字符串。
 
-通过完成以上通用基础设施配置，能够极大提升团队协作效率，减少代码风格不一致、提交信息不规范等问题，为全栈博客系统的持续开发提供有力保障。
+### 代码别名设置
+
+在项目开发中，合理设置代码别名能有效简化模块导入路径，提升代码的可读性与可维护性。
+
+#### **Vite 配置**
+
+```javascript
+// https://vite.dev/config/
+import path from "node:path";
+export default defineConfig({
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+});
+```
+
+在上述 Vite 配置中，通过`resolve.alias`字段，将`@`别名指向项目的`src`目录。这意味着在前端代码中，我们可以使用`@`来代替冗长的`src`路径前缀进行模块导入，例如`import { someFunction } from '@/utils/someFunction';`，相比`import { someFunction } from '../../../src/utils/someFunction';`更加简洁明了。
+
+#### **TypeScript 配置（在所有 tsconfig.json 相关文件中）**
+
+在`tsconfig.json`、`tsconfig.app.json`、`tsconfig.node.json`、`tsconfig.build.json`等 TypeScript 配置文件中，需要加入如下配置：
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+其中，`baseUrl`设置为`.`表示以项目根目录为基准路径。`paths`字段定义了路径映射规则，`@/*`表示以`@`开头的路径，映射到`./src/*`，即`src`目录下的相应文件或子目录。这样，TypeScript 编译器在编译时能够正确解析使用`@`别名的导入路径，确保项目在 TypeScript 环境下的正常运行与类型检查。
+
+通过完成以上通用基础设施配置，包括代码别名设置，能够极大提升团队协作效率，减少代码风格不一致、提交信息不规范等问题，为全栈博客系统的持续开发提供有力保障。
