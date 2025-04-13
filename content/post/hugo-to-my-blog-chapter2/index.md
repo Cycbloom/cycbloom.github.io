@@ -245,7 +245,6 @@ const updateConsoleInput = (consoles, consoleId, input) => {
 
 - **监听器模式**：控制台组件通过`logger.addListener`注册日志回调
 - **级别过滤**：生产环境默认屏蔽 DEBUG 日志
-- **性能优化**：采用防抖机制合并高频日志事件
 
 ---
 
