@@ -257,6 +257,8 @@ const updateConsoleInput = (consoles, consoleId, input) => {
 - **主题可定制化**：开发者可通过修改主题配置快速切换视觉风格
 - **日志诊断工具**：实时显示系统日志，支持按级别过滤
 
+<img src="image.png" alt="console界面" width="600px">
+
 #### 下一步演进计划
 
 | 方向       | 具体内容                                                     |
