@@ -142,7 +142,68 @@ export const ConsoleProvider = ({ children }) => {
 
 ---
 
-#### 3. 命令解析器（parseCommand）设计
+---
+
+#### 3. ConsoleState 深度解析
+
+`ConsoleState` 是控制台应用的核心数据容器，其设计直接决定了多控制台实例的管理能力和功能边界。以下是其具体定义与设计考量：
+
+```typescript
+interface ConsoleState {
+  id: string; // 唯一标识符，用于区分不同控制台
+  name: string; // 用户可读名称（如"控制台 1"）
+  input: string; // 当前输入框内容
+  output: CommandResult[]; // 历史输出结果集合
+  commandHistory: string[]; // 执行过的命令历史记录
+  historyIndex: number; // 方向键导航时的历史索引（-1表示当前输入）
+  showLogs: boolean; // 是否显示调试日志
+  commandManager: CommandManager; // 专属命令管理器实例
+}
+```
+
+##### 关键字段解读
+
+1. **`commandManager` 隔离性设计**  
+   每个控制台实例持有独立的 `CommandManager`，确保：
+
+   - 命令注册隔离：不同控制台可加载不同的命令集
+   - 执行环境隔离：命令的副作用（如临时变量）不会跨控制台污染
+
+2. **`output` 的结构化存储**  
+   输出结果采用 `CommandResult` 类型封装，支持区分：
+
+   ```typescript
+   interface CommandResult {
+     success: boolean; // 执行是否成功
+     message: string; // 输出信息
+     data?: any; // 附加数据（如API返回结果）
+     isLog?: boolean; // 是否为系统日志
+   }
+   ```
+
+   这种设计使得控制台可以差异化渲染命令结果与系统日志（如颜色区分）。
+
+3. **`historyIndex` 的双向导航**
+   - 值范围：`-1`（当前新输入）到 `commandHistory.length - 1`（最早的历史命令）
+   - 当用户按 ↑ 键时，`historyIndex` 递增并显示对应历史命令
+   - 按 ↓ 键时递减，当回到`-1`时清空输入框
+
+##### 状态更新策略
+
+通过 `ConsoleProvider` 中的工具函数（如 `updateConsoleInput`）实现不可变更新：
+
+```typescript
+// 伪代码：更新输入内容
+const updateConsoleInput = (consoles, consoleId, input) => {
+  return consoles.map((console) =>
+    console.id === consoleId ? { ...console, input } : console
+  );
+};
+```
+
+此模式确保状态变更可追踪，且与 React 的渲染机制深度兼容。
+
+#### 4. 命令解析器（parseCommand）设计
 
 **解析流程**：
 
@@ -166,7 +227,7 @@ export const ConsoleProvider = ({ children }) => {
 
 ---
 
-#### 4. 日志系统的双向通信
+#### 5. 日志系统的双向通信
 
 **实现示意图**：
 
