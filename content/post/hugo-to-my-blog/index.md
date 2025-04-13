@@ -28,5 +28,6 @@ series:
 ## 📚 博客大纲
 
 1. [初始化项目](/p/hugo-to-my-blog/chapter1)
+2. [前端控制台应用](/p/hugo-to-my-blog/chapter2)
 
 > Photo by [Javier Miranda](https://unsplash.com/@nuvaproductions?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)> on [Unsplash](https://unsplash.com/photos/a-view-of-the-earth-from-space-Jn2EaLLYZfY?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
