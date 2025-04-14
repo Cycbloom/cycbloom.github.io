@@ -243,6 +243,8 @@ const TagInput = ({ name, label }: Props) => {
 - **组件复用**：通用表单控件支持多种场景
 - **类型安全**：完整的 TypeScript 类型支持
 
+<img src="image.png" alt="task界面" width="600px">
+
 ---
 
 **结语**  
