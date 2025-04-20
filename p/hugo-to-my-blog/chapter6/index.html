@@ -1,0 +1,496 @@
+<!doctype html><html lang=zh-CN dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="深入解析 TactiCore 任务管理系统的设计与实现过程"><title>Chapter6: 任务管理系统的设计与实现</title>
+<link rel=canonical href=https://blog.cycbloom.com/p/hugo-to-my-blog/chapter6/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Chapter6: 任务管理系统的设计与实现"><meta property='og:description' content="深入解析 TactiCore 任务管理系统的设计与实现过程"><meta property='og:url' content='https://blog.cycbloom.com/p/hugo-to-my-blog/chapter6/'><meta property='og:site_name' content='鎏金阁'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2025-04-20T16:00:00+08:00'><meta property='article:modified_time' content='2025-04-20T16:00:00+08:00'><meta name=twitter:title content="Chapter6: 任务管理系统的设计与实现"><meta name=twitter:description content="深入解析 TactiCore 任务管理系统的设计与实现过程"><link rel="shortcut icon" href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_84d7cd848dfd0892.png width=300 height=299 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🦄</span></figure><div class=site-meta><h1 class=site-name><a href=/>鎏金阁</a></h1><h2 class=site-description>🔥点燃灵感，共享思维的篝火</h2></div></header><ol class=menu-social><li><a href=https://github.com/Cycbloom target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#chapter6-任务管理系统的设计与实现>Chapter6: 任务管理系统的设计与实现</a><ol><li><a href=#一状态管理设计>一、状态管理设计</a><ol><li><a href=#1-任务状态存储设计>1. 任务状态存储设计</a></li></ol></li><li><a href=#二api-层设计>二、API 层设计</a><ol><li><a href=#1-任务-api-封装>1. 任务 API 封装</a></li></ol></li><li><a href=#三组件实现>三、组件实现</a><ol><li><a href=#1-任务页面组件>1. 任务页面组件</a></li><li><a href=#2-任务列表组件>2. 任务列表组件</a></li><li><a href=#3-任务过滤组件>3. 任务过滤组件</a></li></ol></li><li><a href=#四路由配置>四、路由配置</a></li><li><a href=#五总结与展望>五、总结与展望</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/p/hugo-to-my-blog/chapter6/>Chapter6: 任务管理系统的设计与实现</a></h2><h3 class=article-subtitle>深入解析 TactiCore 任务管理系统的设计与实现过程</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Apr 20, 2025</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 4 分钟</time></div></footer></div></header><section class=article-content><hr><h2 id=chapter6-任务管理系统的设计与实现>Chapter6: 任务管理系统的设计与实现</h2><p>——基于 React 和 Zustand 的现代化任务管理系统</p><hr><h3 id=一状态管理设计>一、状态管理设计</h3><p>TactiCore 的任务管理系统采用 Zustand 进行状态管理，实现了高效的任务数据处理和过滤功能。</p><h4 id=1-任务状态存储设计>1. 任务状态存储设计</h4><p>使用 Zustand 创建任务状态存储：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>TaskState</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>tasks</span>: <span class=kt>Task</span><span class=p>[];</span>
+</span></span><span class=line><span class=cl>  <span class=nx>loading</span>: <span class=kt>boolean</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>error</span>: <span class=kt>string</span> <span class=o>|</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>selectedTask</span>: <span class=kt>Task</span> <span class=o>|</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>filters</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>status</span>: <span class=kt>string</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>priority</span>: <span class=kt>string</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>search</span>: <span class=kt>string</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>TaskActions</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setTasks</span><span class=o>:</span> <span class=p>(</span><span class=nx>tasks</span>: <span class=kt>Task</span><span class=p>[])</span> <span class=o>=&gt;</span> <span class=k>void</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setLoading</span><span class=o>:</span> <span class=p>(</span><span class=nx>loading</span>: <span class=kt>boolean</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=k>void</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setError</span><span class=o>:</span> <span class=p>(</span><span class=nx>error</span>: <span class=kt>string</span> <span class=o>|</span> <span class=kc>null</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=k>void</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setSelectedTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>task</span>: <span class=kt>Task</span> <span class=o>|</span> <span class=kc>null</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=k>void</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setFilters</span><span class=o>:</span> <span class=p>(</span><span class=nx>filters</span>: <span class=kt>Partial</span><span class=p>&lt;</span><span class=nt>TaskState</span><span class=err>[</span><span class=s2>&#34;filters&#34;</span><span class=err>]</span><span class=p>&gt;)</span> <span class=o>=&gt;</span> <span class=k>void</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>addTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>task</span>: <span class=kt>Task</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=k>void</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>updateTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>task</span>: <span class=kt>Task</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=k>void</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>deleteTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>id</span>: <span class=kt>string</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=k>void</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>useTaskStore</span> <span class=o>=</span> <span class=nx>create</span><span class=p>&lt;</span><span class=nt>TaskState</span> <span class=err>&amp;</span> <span class=na>TaskActions</span><span class=p>&gt;((</span><span class=kr>set</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 初始状态
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>tasks</span><span class=o>:</span> <span class=p>[],</span>
+</span></span><span class=line><span class=cl>  <span class=nx>loading</span>: <span class=kt>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>error</span>: <span class=kt>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>selectedTask</span>: <span class=kt>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>filters</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>status</span><span class=o>:</span> <span class=s2>&#34;all&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>priority</span><span class=o>:</span> <span class=s2>&#34;all&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>search</span><span class=o>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 状态更新方法
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>setTasks</span><span class=o>:</span> <span class=p>(</span><span class=nx>tasks</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=kr>set</span><span class=p>({</span> <span class=nx>tasks</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setLoading</span><span class=o>:</span> <span class=p>(</span><span class=nx>loading</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=kr>set</span><span class=p>({</span> <span class=nx>loading</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setError</span><span class=o>:</span> <span class=p>(</span><span class=nx>error</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=kr>set</span><span class=p>({</span> <span class=nx>error</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setSelectedTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>task</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=kr>set</span><span class=p>({</span> <span class=nx>selectedTask</span>: <span class=kt>task</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setFilters</span><span class=o>:</span> <span class=p>(</span><span class=nx>filters</span><span class=p>)</span> <span class=o>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=kr>set</span><span class=p>((</span><span class=nx>state</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>filters</span><span class=o>:</span> <span class=p>{</span> <span class=p>...</span><span class=nx>state</span><span class=p>.</span><span class=nx>filters</span><span class=p>,</span> <span class=p>...</span><span class=nx>filters</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>})),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>addTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>task</span><span class=p>)</span> <span class=o>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=kr>set</span><span class=p>((</span><span class=nx>state</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>tasks</span><span class=o>:</span> <span class=p>[...</span><span class=nx>state</span><span class=p>.</span><span class=nx>tasks</span><span class=p>,</span> <span class=nx>task</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=p>})),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>updateTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>task</span><span class=p>)</span> <span class=o>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=kr>set</span><span class=p>((</span><span class=nx>state</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>tasks</span>: <span class=kt>state.tasks.map</span><span class=p>((</span><span class=nx>t</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>(</span><span class=nx>t</span><span class=p>.</span><span class=nx>id</span> <span class=o>===</span> <span class=nx>task</span><span class=p>.</span><span class=nx>id</span> <span class=o>?</span> <span class=nx>task</span> : <span class=kt>t</span><span class=p>)),</span>
+</span></span><span class=line><span class=cl>    <span class=p>})),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>deleteTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>id</span><span class=p>)</span> <span class=o>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=kr>set</span><span class=p>((</span><span class=nx>state</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>tasks</span>: <span class=kt>state.tasks.filter</span><span class=p>((</span><span class=nx>t</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=nx>t</span><span class=p>.</span><span class=nx>id</span> <span class=o>!==</span> <span class=nx>id</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=p>})),</span>
+</span></span><span class=line><span class=cl><span class=p>}));</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>状态管理特点</strong>：</p><ul><li><strong>状态集中管理</strong>：所有任务相关状态统一管理</li><li><strong>类型安全</strong>：使用 TypeScript 接口确保类型安全</li><li><strong>不可变更新</strong>：使用不可变方式更新状态</li><li><strong>过滤状态</strong>：包含任务过滤条件的状态管理</li></ul><h3 id=二api-层设计>二、API 层设计</h3><h4 id=1-任务-api-封装>1. 任务 API 封装</h4><p>使用 Axios 封装任务相关的 API 请求：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>export</span> <span class=kr>const</span> <span class=nx>taskApi</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 获取任务列表
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>getTasks</span><span class=o>:</span> <span class=p>(</span><span class=nx>filters</span>: <span class=kt>FilterFormData</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>cleanedFilters</span> <span class=o>=</span> <span class=nx>cleanFilters</span><span class=p>(</span><span class=nx>filters</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>request</span><span class=p>.</span><span class=kr>get</span><span class=p>&lt;</span><span class=nt>Task</span><span class=err>[]</span><span class=p>&gt;(</span><span class=s2>&#34;/tasks&#34;</span><span class=p>,</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>params</span>: <span class=kt>cleanedFilters</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>headers</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Content-Type&#34;</span><span class=o>:</span> <span class=s2>&#34;application/json&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span> <span class=kr>as</span> <span class=nx>AxiosRequestHeaders</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 获取单个任务
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>getTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>id</span>: <span class=kt>string</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>request</span><span class=p>.</span><span class=kr>get</span><span class=p>&lt;</span><span class=nt>Task</span><span class=p>&gt;(</span><span class=sb>`/tasks/</span><span class=si>${</span><span class=nx>id</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 创建任务
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>createTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>taskData</span>: <span class=kt>TaskFormData</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>request</span><span class=p>.</span><span class=nx>post</span><span class=p>&lt;</span><span class=nt>Task</span><span class=p>&gt;(</span><span class=s2>&#34;/tasks&#34;</span><span class=p>,</span> <span class=nx>taskData</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 更新任务
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>updateTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>id</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>taskData</span>: <span class=kt>Partial</span><span class=p>&lt;</span><span class=nt>TaskFormData</span><span class=p>&gt;)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>request</span><span class=p>.</span><span class=nx>put</span><span class=p>&lt;</span><span class=nt>Task</span><span class=p>&gt;(</span><span class=sb>`/tasks/</span><span class=si>${</span><span class=nx>id</span><span class=si>}</span><span class=sb>`</span><span class=p>,</span> <span class=nx>taskData</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 删除任务
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>deleteTask</span><span class=o>:</span> <span class=p>(</span><span class=nx>id</span>: <span class=kt>string</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>request</span><span class=p>.</span><span class=k>delete</span><span class=p>(</span><span class=sb>`/tasks/</span><span class=si>${</span><span class=nx>id</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>API 特点</strong>：</p><ul><li><strong>智能过滤</strong>：自动清理无效的过滤条件</li><li><strong>类型安全</strong>：使用泛型确保响应类型</li><li><strong>统一管理</strong>：集中管理所有任务相关的 API</li></ul><h3 id=三组件实现>三、组件实现</h3><h4 id=1-任务页面组件>1. 任务页面组件</h4><p>TaskPage 作为任务管理的容器组件：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>TaskPage</span>: <span class=kt>React.FC</span> <span class=o>=</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>tasks</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>loading</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>error</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>filters</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setTasks</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setLoading</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setError</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setFilters</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>addTask</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>updateTask</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>deleteTask</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=o>=</span> <span class=nx>useTaskStore</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nx>useEffect</span><span class=p>(()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>fetchTasks</span> <span class=o>=</span> <span class=kr>async</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>try</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>setLoading</span><span class=p>(</span><span class=kc>true</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=kr>const</span> <span class=nx>data</span> <span class=o>=</span> <span class=k>await</span> <span class=nx>taskApi</span><span class=p>.</span><span class=nx>getTasks</span><span class=p>(</span><span class=nx>filters</span> <span class=kr>as</span> <span class=nx>FilterFormData</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=nx>setTasks</span><span class=p>(</span><span class=nx>data</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=nx>err</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>setError</span><span class=p>(</span><span class=nx>err</span> <span class=k>instanceof</span> <span class=nb>Error</span> <span class=o>?</span> <span class=nx>err</span><span class=p>.</span><span class=nx>message</span> <span class=o>:</span> <span class=s2>&#34;获取任务失败&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span> <span class=k>finally</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>setLoading</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nx>fetchTasks</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span> <span class=p>[</span><span class=nx>filters</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// ... 任务操作处理方法
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>Container</span> <span class=na>maxWidth</span><span class=o>=</span><span class=s>&#34;lg&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Box</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>my</span>: <span class=kt>4</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#34;h4&#34;</span> <span class=na>component</span><span class=o>=</span><span class=s>&#34;h1&#34;</span> <span class=na>gutterBottom</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=err>任务管理</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>TaskList</span>
+</span></span><span class=line><span class=cl>          <span class=na>tasks</span><span class=o>=</span><span class=p>{</span><span class=nx>tasks</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=na>filters</span><span class=o>=</span><span class=p>{</span><span class=nx>filters</span> <span class=kr>as</span> <span class=nx>FilterFormData</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=na>onFilterChange</span><span class=o>=</span><span class=p>{</span><span class=nx>handleFilterChange</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=na>onEditTask</span><span class=o>=</span><span class=p>{</span><span class=nx>handleEditTask</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=na>onDeleteTask</span><span class=o>=</span><span class=p>{</span><span class=nx>handleDeleteTask</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=na>onToggleStatus</span><span class=o>=</span><span class=p>{</span><span class=nx>handleToggleStatus</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=na>onCreateTask</span><span class=o>=</span><span class=p>{</span><span class=nx>handleCreateTask</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>Container</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=2-任务列表组件>2. 任务列表组件</h4><p>TaskList 负责展示任务列表和过滤功能：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>TaskList</span>: <span class=kt>React.FC</span><span class=p>&lt;</span><span class=nt>TaskListProps</span><span class=p>&gt;</span> <span class=o>=</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>tasks</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>filters</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>onFilterChange</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>onEditTask</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>onDeleteTask</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>onToggleStatus</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>onCreateTask</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>})</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>[</span><span class=nx>isCreateDialogOpen</span><span class=p>,</span> <span class=nx>setIsCreateDialogOpen</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Stack</span> <span class=na>spacing</span><span class=o>=</span><span class=p>{</span><span class=mi>2</span><span class=p>}</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>mb</span>: <span class=kt>3</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>TaskFilter</span> <span class=na>filters</span><span class=o>=</span><span class=p>{</span><span class=nx>filters</span><span class=p>}</span> <span class=na>onFilterChange</span><span class=o>=</span><span class=p>{</span><span class=nx>onFilterChange</span><span class=p>}</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Button</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#34;contained&#34;</span> <span class=na>onClick</span><span class=o>=</span><span class=p>{()</span> <span class=o>=&gt;</span> <span class=nx>setIsCreateDialogOpen</span><span class=p>(</span><span class=kc>true</span><span class=p>)}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=err>创建任务</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Button</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Stack</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Stack</span> <span class=na>spacing</span><span class=o>=</span><span class=p>{</span><span class=mi>2</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span><span class=nx>tasks</span><span class=p>.</span><span class=nx>map</span><span class=p>((</span><span class=nx>task</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>TaskCard</span>
+</span></span><span class=line><span class=cl>            <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>task</span><span class=p>.</span><span class=nx>id</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=na>task</span><span class=o>=</span><span class=p>{</span><span class=nx>task</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=na>onEdit</span><span class=o>=</span><span class=p>{()</span> <span class=o>=&gt;</span> <span class=nx>onEditTask</span><span class=p>(</span><span class=nx>task</span><span class=p>)}</span>
+</span></span><span class=line><span class=cl>            <span class=na>onDelete</span><span class=o>=</span><span class=p>{()</span> <span class=o>=&gt;</span> <span class=nx>onDeleteTask</span><span class=p>(</span><span class=nx>task</span><span class=p>.</span><span class=nx>id</span><span class=p>)}</span>
+</span></span><span class=line><span class=cl>            <span class=na>onStatusChange</span><span class=o>=</span><span class=p>{()</span> <span class=o>=&gt;</span> <span class=nx>onToggleStatus</span><span class=p>(</span><span class=nx>task</span><span class=p>.</span><span class=nx>id</span><span class=p>)}</span>
+</span></span><span class=line><span class=cl>          <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>))}</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Stack</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Dialog</span>
+</span></span><span class=line><span class=cl>        <span class=na>open</span><span class=o>=</span><span class=p>{</span><span class=nx>isCreateDialogOpen</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=na>onClose</span><span class=o>=</span><span class=p>{()</span> <span class=o>=&gt;</span> <span class=nx>setIsCreateDialogOpen</span><span class=p>(</span><span class=kc>false</span><span class=p>)}</span>
+</span></span><span class=line><span class=cl>        <span class=na>maxWidth</span><span class=o>=</span><span class=s>&#34;sm&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=na>fullWidth</span>
+</span></span><span class=line><span class=cl>      <span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Box</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>p</span>: <span class=kt>3</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>TaskForm</span>
+</span></span><span class=line><span class=cl>            <span class=na>onSubmit</span><span class=o>=</span><span class=p>{</span><span class=nx>onCreateTask</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=na>onCancel</span><span class=o>=</span><span class=p>{()</span> <span class=o>=&gt;</span> <span class=nx>setIsCreateDialogOpen</span><span class=p>(</span><span class=kc>false</span><span class=p>)}</span>
+</span></span><span class=line><span class=cl>          <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Dialog</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=3-任务过滤组件>3. 任务过滤组件</h4><p>TaskFilter 实现任务过滤功能：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>TaskFilter</span>: <span class=kt>React.FC</span><span class=p>&lt;</span><span class=nt>TaskFilterProps</span><span class=p>&gt;</span> <span class=o>=</span> <span class=p>({</span> <span class=nx>filters</span><span class=p>,</span> <span class=nx>onFilterChange</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>BaseForm</span><span class=p>&lt;</span><span class=nt>FilterFormData</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=na>onSubmit</span><span class=o>=</span><span class=p>{</span><span class=nx>onFilterChange</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=na>defaultValues</span><span class=o>=</span><span class=p>{</span><span class=nx>filters</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=na>schema</span><span class=o>=</span><span class=p>{</span><span class=nx>filterSchema</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=na>formTitle</span><span class=o>=</span><span class=s>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=na>submitButtonText</span><span class=o>=</span><span class=s>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=na>resetAfterSubmit</span><span class=o>=</span><span class=p>{</span><span class=kc>false</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=na>onFormDataChange</span><span class=o>=</span><span class=p>{</span><span class=nx>onFilterChange</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Box</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>display</span><span class=o>:</span> <span class=s2>&#34;flex&#34;</span><span class=p>,</span> <span class=nx>gap</span>: <span class=kt>2</span><span class=p>,</span> <span class=nx>alignItems</span><span class=o>:</span> <span class=s2>&#34;flex-start&#34;</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Box</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>flex</span>: <span class=kt>2</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>FormInput</span> <span class=na>name</span><span class=o>=</span><span class=s>&#34;search&#34;</span> <span class=na>label</span><span class=o>=</span><span class=s>&#34;搜索任务&#34;</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Box</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>flex</span>: <span class=kt>1</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>GenericSelect</span>
+</span></span><span class=line><span class=cl>            <span class=na>name</span><span class=o>=</span><span class=s>&#34;status&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=na>label</span><span class=o>=</span><span class=s>&#34;状态筛选&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=na>options</span><span class=o>=</span><span class=p>{</span><span class=nx>statusOptionsWithAll</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Box</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>flex</span>: <span class=kt>1</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>GenericSelect</span>
+</span></span><span class=line><span class=cl>            <span class=na>name</span><span class=o>=</span><span class=s>&#34;priority&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=na>label</span><span class=o>=</span><span class=s>&#34;优先级筛选&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=na>options</span><span class=o>=</span><span class=p>{</span><span class=nx>priorityOptionsWithAll</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>BaseForm</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=四路由配置>四、路由配置</h3><p>使用 React Router 配置任务管理路由：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>export</span> <span class=kr>const</span> <span class=nx>router</span> <span class=o>=</span> <span class=nx>createBrowserRouter</span><span class=p>([</span>
+</span></span><span class=line><span class=cl>  <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>path</span><span class=o>:</span> <span class=s2>&#34;/&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>element</span><span class=o>:</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>ProtectedRoute</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Outlet</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>ProtectedRoute</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=nx>children</span><span class=o>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>path</span><span class=o>:</span> <span class=s2>&#34;tasks&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nx>element</span><span class=o>:</span> <span class=p>&lt;</span><span class=nt>TaskPage</span> <span class=p>/&gt;,</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl><span class=p>]);</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=五总结与展望>五、总结与展望</h3><p>TactiCore 的任务管理系统实现了一个完整的现代化任务管理解决方案。</p><p><strong>技术亮点</strong>：</p><ul><li><strong>状态管理</strong>：使用 Zustand 实现高效的状态管理</li><li><strong>组件设计</strong>：采用组件化设计，提高代码复用性</li><li><strong>类型安全</strong>：全面使用 TypeScript 确保类型安全</li><li><strong>实时过滤</strong>：实现了实时任务过滤功能</li><li><strong>响应式设计</strong>：使用 Material-UI 实现响应式界面</li></ul><p><strong>未来展望</strong>：</p><ol><li>添加任务拖拽排序功能</li><li>实现任务标签系统</li><li>添加任务统计和分析功能</li><li>优化任务搜索性能</li><li>添加任务导出功能</li></ol><p>通过这些模块的实现，TactiCore 提供了一个功能完整、用户友好的任务管理系统，为用户提供高效的任务管理体验。</p></section><footer class=article-footer><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><script src=//unpkg.com/@waline/client@v2/dist/waline.js></script><link href=//unpkg.com/@waline/client@v2/dist/waline.css rel=stylesheet><div id=waline class=waline-container></div><style>.waline-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding);--waline-font-size:var(--article-font-size)}.waline-container .wl-count{color:var(--card-text-color-main)}</style><script>Waline.init({avatar:"",dark:'html[data-scheme="dark"]',el:"#waline",emoji:["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],lang:"zh-CN",locale:{admin:"Admin",placeholder:"说点啥~"},requiredMeta:["nick","mail","url"],serverURL:"comment.cycbloom.com"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2025 鎏金阁</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.30.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

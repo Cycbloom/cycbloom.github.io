@@ -1,0 +1,979 @@
+<!doctype html><html lang=zh-CN dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="深入解析 TactiCore 后端架构设计与核心模块实现"><title>Chapter4: 后端架构与实现</title>
+<link rel=canonical href=https://blog.cycbloom.com/p/hugo-to-my-blog/chapter4/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Chapter4: 后端架构与实现"><meta property='og:description' content="深入解析 TactiCore 后端架构设计与核心模块实现"><meta property='og:url' content='https://blog.cycbloom.com/p/hugo-to-my-blog/chapter4/'><meta property='og:site_name' content='鎏金阁'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2025-04-15T14:00:00+08:00'><meta property='article:modified_time' content='2025-04-15T14:00:00+08:00'><meta name=twitter:title content="Chapter4: 后端架构与实现"><meta name=twitter:description content="深入解析 TactiCore 后端架构设计与核心模块实现"><link rel="shortcut icon" href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_84d7cd848dfd0892.png width=300 height=299 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🦄</span></figure><div class=site-meta><h1 class=site-name><a href=/>鎏金阁</a></h1><h2 class=site-description>🔥点燃灵感，共享思维的篝火</h2></div></header><ol class=menu-social><li><a href=https://github.com/Cycbloom target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#chapter4-后端架构与实现>Chapter4: 后端架构与实现</a><ol><li><a href=#一项目架构概览>一、项目架构概览</a></li><li><a href=#二认证模块实现>二、认证模块实现</a><ol><li><a href=#1-jwt-策略设计>1. JWT 策略设计</a></li><li><a href=#2-认证模块配置>2. 认证模块配置</a></li><li><a href=#3-认证守卫>3. 认证守卫</a></li></ol></li><li><a href=#三配置模块设计>三、配置模块设计</a><ol><li><a href=#1-配置模式定义>1. 配置模式定义</a></li><li><a href=#2-配置服务实现>2. 配置服务实现</a></li><li><a href=#3-配置模块注册>3. 配置模块注册</a></li></ol></li><li><a href=#四数据库模块实现>四、数据库模块实现</a><ol><li><a href=#1-prisma-服务设计>1. Prisma 服务设计</a></li><li><a href=#2-数据库模型定义>2. 数据库模型定义</a></li><li><a href=#3-数据库迁移管理>3. 数据库迁移管理</a></li></ol></li><li><a href=#五任务管理模块实现>五、任务管理模块实现</a><ol><li><a href=#1-数据模型定义>1. 数据模型定义</a></li><li><a href=#2-任务服务实现>2. 任务服务实现</a></li><li><a href=#3-任务控制器实现>3. 任务控制器实现</a></li></ol></li><li><a href=#六docker-部署配置>六、Docker 部署配置</a><ol><li><a href=#1-开发环境-dockerfile>1. 开发环境 Dockerfile</a></li><li><a href=#2-生产环境-dockerfile>2. 生产环境 Dockerfile</a></li><li><a href=#3-docker-compose-配置>3. Docker Compose 配置</a></li></ol></li><li><a href=#七api-测试与文档>七、API 测试与文档</a><ol><li><a href=#1-postman-测试集设计>1. Postman 测试集设计</a></li><li><a href=#2-jwt-认证配置>2. JWT 认证配置</a></li><li><a href=#3-测试流程>3. 测试流程</a></li></ol></li><li><a href=#八总结与展望>八、总结与展望</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/p/hugo-to-my-blog/chapter4/>Chapter4: 后端架构与实现</a></h2><h3 class=article-subtitle>深入解析 TactiCore 后端架构设计与核心模块实现</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Apr 15, 2025</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 10 分钟</time></div></footer></div></header><section class=article-content><hr><h2 id=chapter4-后端架构与实现>Chapter4: 后端架构与实现</h2><p>——从认证到任务管理的全栈解析</p><hr><h3 id=一项目架构概览>一、项目架构概览</h3><p>TactiCore 后端采用 NestJS 框架构建，遵循模块化设计原则，各功能模块高度解耦。整体架构如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>backend/
+</span></span><span class=line><span class=cl>├── src/
+</span></span><span class=line><span class=cl>│   ├── core/           # 核心模块
+</span></span><span class=line><span class=cl>│   │   ├── auth/       # 认证模块
+</span></span><span class=line><span class=cl>│   │   └── config/     # 配置模块
+</span></span><span class=line><span class=cl>│   ├── database/       # 数据库模块
+</span></span><span class=line><span class=cl>│   │   ├── schemas/    # 数据模型定义
+</span></span><span class=line><span class=cl>│   │   └── prisma/     # Prisma 服务
+</span></span><span class=line><span class=cl>│   ├── task/           # 任务管理模块
+</span></span><span class=line><span class=cl>│   └── main.ts         # 应用入口
+</span></span><span class=line><span class=cl>├── prisma/             # Prisma 配置
+</span></span><span class=line><span class=cl>│   ├── schema.prisma   # 数据库模型定义
+</span></span><span class=line><span class=cl>│   └── migrations/     # 数据库迁移文件
+</span></span><span class=line><span class=cl>└── scripts/            # 辅助脚本
+</span></span><span class=line><span class=cl>    └── init-db.sh      # 数据库初始化脚本
+</span></span></code></pre></td></tr></table></div></div><p><strong>架构特点</strong>：</p><ul><li><strong>模块化设计</strong>：每个功能模块独立封装，通过依赖注入实现松耦合</li><li><strong>分层架构</strong>：控制器层处理请求，服务层实现业务逻辑，数据访问层与数据库交互</li><li><strong>类型安全</strong>：全面使用 TypeScript 类型系统，确保代码健壮性</li><li><strong>容器化部署</strong>：基于 Docker 和 Docker Compose 实现环境一致性</li></ul><hr><h3 id=二认证模块实现>二、认证模块实现</h3><p>认证模块是系统的安全基石，我们采用 JWT (JSON Web Token) 实现无状态认证。</p><h4 id=1-jwt-策略设计>1. JWT 策略设计</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// JwtStrategy 实现
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kd>@Injectable</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>JwtStrategy</span> <span class=kr>extends</span> <span class=nx>PassportStrategy</span><span class=p>(</span><span class=nx>Strategy</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>(</span><span class=kr>private</span> <span class=nx>configService</span>: <span class=kt>ConfigService</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>super</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>jwtFromRequest</span>: <span class=kt>ExtractJwt.fromAuthHeaderAsBearerToken</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>      <span class=nx>ignoreExpiration</span>: <span class=kt>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>secretOrKey</span>: <span class=kt>configService.getOrThrow</span><span class=p>&lt;</span><span class=nt>string</span><span class=p>&gt;(</span><span class=s2>&#34;JWT_SECRET&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>async</span> <span class=nx>validate</span><span class=p>(</span><span class=nx>payload</span>: <span class=kt>any</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>{</span> <span class=nx>userId</span>: <span class=kt>payload.sub</span><span class=p>,</span> <span class=nx>username</span>: <span class=kt>payload.username</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>关键技术点</strong>：</p><ul><li><strong>策略模式</strong>：通过继承 <code>PassportStrategy</code> 实现自定义认证策略</li><li><strong>配置注入</strong>：使用 <code>ConfigService</code> 获取环境变量中的密钥</li><li><strong>令牌提取</strong>：从请求头中提取 Bearer 令牌</li><li><strong>负载验证</strong>：验证 JWT 令牌的有效性并返回用户信息</li></ul><h4 id=2-认证模块配置>2. 认证模块配置</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@Module</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>imports</span><span class=o>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=nx>PassportModule</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>ConfigModule</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>JwtModule</span><span class=p>.</span><span class=nx>registerAsync</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>imports</span><span class=o>:</span> <span class=p>[</span><span class=nx>ConfigModule</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>      <span class=nx>useFactory</span>: <span class=kt>async</span> <span class=p>(</span><span class=nx>configService</span>: <span class=kt>ConfigService</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>        <span class=nx>secret</span>: <span class=kt>configService.getOrThrow</span><span class=p>&lt;</span><span class=nt>string</span><span class=p>&gt;(</span><span class=s2>&#34;JWT_SECRET&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=nx>signOptions</span><span class=o>:</span> <span class=p>{</span> <span class=nx>expiresIn</span><span class=o>:</span> <span class=s2>&#34;1d&#34;</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>}),</span>
+</span></span><span class=line><span class=cl>      <span class=nx>inject</span><span class=o>:</span> <span class=p>[</span><span class=nx>ConfigService</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nx>providers</span><span class=o>:</span> <span class=p>[</span><span class=nx>JwtStrategy</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nx>exports</span><span class=o>:</span> <span class=p>[</span><span class=nx>JwtModule</span><span class=p>],</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>AuthModule</span> <span class=p>{}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>模块设计</strong>：</p><ul><li><strong>异步配置</strong>：使用 <code>registerAsync</code> 实现 JWT 模块的异步配置</li><li><strong>依赖注入</strong>：通过 <code>inject</code> 注入 <code>ConfigService</code> 依赖</li><li><strong>模块导出</strong>：导出 <code>JwtModule</code> 供其他模块使用</li></ul><h4 id=3-认证守卫>3. 认证守卫</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@Injectable</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>JwtAuthGuard</span> <span class=kr>extends</span> <span class=nx>AuthGuard</span><span class=p>(</span><span class=s2>&#34;jwt&#34;</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>canActivate</span><span class=p>(</span><span class=nx>context</span>: <span class=kt>ExecutionContext</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=kr>super</span><span class=p>.</span><span class=nx>canActivate</span><span class=p>(</span><span class=nx>context</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>使用方式</strong>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@Controller</span><span class=p>(</span><span class=s2>&#34;tasks&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kd>@UseGuards</span><span class=p>(</span><span class=nx>JwtAuthGuard</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>TaskController</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 控制器方法...
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>设计优势</strong>：</p><ul><li><strong>全局保护</strong>：通过装饰器轻松为整个控制器添加认证保护</li><li><strong>灵活配置</strong>：支持基于角色的访问控制扩展</li><li><strong>异常处理</strong>：自动处理认证失败情况</li></ul><hr><h3 id=三配置模块设计>三、配置模块设计</h3><p>配置模块负责管理系统配置，支持环境变量和配置验证。</p><h4 id=1-配置模式定义>1. 配置模式定义</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// 配置模式定义
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=kr>const</span> <span class=nx>configValidationSchema</span> <span class=o>=</span> <span class=nx>Joi</span><span class=p>.</span><span class=kt>object</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>NODE_ENV</span>: <span class=kt>Joi.string</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=nx>valid</span><span class=p>(</span><span class=s2>&#34;development&#34;</span><span class=p>,</span> <span class=s2>&#34;production&#34;</span><span class=p>,</span> <span class=s2>&#34;test&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=k>default</span><span class=p>(</span><span class=s2>&#34;development&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>PORT</span>: <span class=kt>Joi.number</span><span class=p>().</span><span class=k>default</span><span class=p>(</span><span class=mi>3000</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>JWT_SECRET</span>: <span class=kt>Joi.string</span><span class=p>().</span><span class=nx>required</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>POSTGRES_URL</span>: <span class=kt>Joi.string</span><span class=p>().</span><span class=nx>required</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>MONGODB_URL</span>: <span class=kt>Joi.string</span><span class=p>().</span><span class=nx>required</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>验证机制</strong>：</p><ul><li><strong>类型安全</strong>：使用 Joi 进行运行时类型验证</li><li><strong>默认值</strong>：为可选配置提供合理的默认值</li><li><strong>必填项</strong>：标记关键配置为必填项</li></ul><h4 id=2-配置服务实现>2. 配置服务实现</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@Injectable</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>ConfigService</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>private</span> <span class=kr>readonly</span> <span class=nx>config</span>: <span class=kt>Record</span><span class=p>&lt;</span><span class=nt>string</span><span class=p>,</span> <span class=na>any</span><span class=p>&gt;;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>this</span><span class=p>.</span><span class=nx>config</span> <span class=o>=</span> <span class=k>this</span><span class=p>.</span><span class=nx>validateConfig</span><span class=p>(</span><span class=nx>process</span><span class=p>.</span><span class=nx>env</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>get</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;(</span><span class=nx>key</span>: <span class=kt>string</span><span class=p>)</span><span class=o>:</span> <span class=nx>T</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>this</span><span class=p>.</span><span class=nx>config</span><span class=p>[</span><span class=nx>key</span><span class=p>]</span> <span class=kr>as</span> <span class=nx>T</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nx>getOrThrow</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;(</span><span class=nx>key</span>: <span class=kt>string</span><span class=p>)</span><span class=o>:</span> <span class=nx>T</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>value</span> <span class=o>=</span> <span class=k>this</span><span class=p>.</span><span class=kr>get</span><span class=p>&lt;</span><span class=nt>T</span><span class=p>&gt;(</span><span class=nx>key</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>value</span> <span class=o>===</span> <span class=kc>undefined</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>throw</span> <span class=k>new</span> <span class=nb>Error</span><span class=p>(</span><span class=sb>`配置项 </span><span class=si>${</span><span class=nx>key</span><span class=si>}</span><span class=sb> 未定义`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>private</span> <span class=nx>validateConfig</span><span class=p>(</span><span class=nx>config</span>: <span class=kt>Record</span><span class=p>&lt;</span><span class=nt>string</span><span class=p>,</span> <span class=na>any</span><span class=p>&gt;)</span><span class=o>:</span> <span class=nx>Record</span><span class=p>&lt;</span><span class=nt>string</span><span class=p>,</span> <span class=na>any</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=p>{</span> <span class=nx>error</span><span class=p>,</span> <span class=nx>value</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>configValidationSchema</span><span class=p>.</span><span class=nx>validate</span><span class=p>(</span><span class=nx>config</span><span class=p>,</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>abortEarly</span>: <span class=kt>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>allowUnknown</span>: <span class=kt>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>throw</span> <span class=k>new</span> <span class=nb>Error</span><span class=p>(</span><span class=sb>`配置验证失败: </span><span class=si>${</span><span class=nx>error</span><span class=p>.</span><span class=nx>message</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>服务特点</strong>：</p><ul><li><strong>类型安全</strong>：支持泛型获取配置值</li><li><strong>错误处理</strong>：提供 <code>getOrThrow</code> 方法确保关键配置存在</li><li><strong>验证逻辑</strong>：在初始化时验证所有配置项</li></ul><h4 id=3-配置模块注册>3. 配置模块注册</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@Module</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>providers</span><span class=o>:</span> <span class=p>[</span><span class=nx>ConfigService</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nx>exports</span><span class=o>:</span> <span class=p>[</span><span class=nx>ConfigService</span><span class=p>],</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>ConfigModule</span> <span class=p>{}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>模块设计</strong>：</p><ul><li><strong>单例模式</strong>：配置服务作为单例在整个应用中共享</li><li><strong>依赖导出</strong>：导出配置服务供其他模块使用</li></ul><hr><h3 id=四数据库模块实现>四、数据库模块实现</h3><p>数据库模块采用 Prisma ORM 实现，支持 PostgreSQL 和 MongoDB 双数据库。</p><h4 id=1-prisma-服务设计>1. Prisma 服务设计</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@Injectable</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>PrismaService</span>
+</span></span><span class=line><span class=cl>  <span class=kr>extends</span> <span class=nx>PrismaClient</span>
+</span></span><span class=line><span class=cl>  <span class=kr>implements</span> <span class=nx>OnModuleInit</span><span class=p>,</span> <span class=nx>OnModuleDestroy</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>super</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>log</span><span class=o>:</span> <span class=p>[</span><span class=s2>&#34;query&#34;</span><span class=p>,</span> <span class=s2>&#34;info&#34;</span><span class=p>,</span> <span class=s2>&#34;warn&#34;</span><span class=p>,</span> <span class=s2>&#34;error&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>async</span> <span class=nx>onModuleInit() {</span>
+</span></span><span class=line><span class=cl>    <span class=k>await</span> <span class=k>this</span><span class=p>.</span><span class=nx>$connect</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>await</span> <span class=k>this</span><span class=p>.</span><span class=nx>$executeRaw</span><span class=sb>`SELECT 1`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s2>&#34;数据库连接成功&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=nx>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>console</span><span class=p>.</span><span class=nx>error</span><span class=p>(</span><span class=s2>&#34;数据库连接失败:&#34;</span><span class=p>,</span> <span class=nx>error</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=k>throw</span> <span class=nx>error</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>async</span> <span class=nx>onModuleDestroy() {</span>
+</span></span><span class=line><span class=cl>    <span class=k>await</span> <span class=k>this</span><span class=p>.</span><span class=nx>$disconnect</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>服务特点</strong>：</p><ul><li><strong>生命周期钩子</strong>：实现 <code>OnModuleInit</code> 和 <code>OnModuleDestroy</code> 接口</li><li><strong>连接管理</strong>：在模块初始化时连接数据库，销毁时断开连接</li><li><strong>健康检查</strong>：通过执行简单查询验证数据库连接状态</li></ul><h4 id=2-数据库模型定义>2. 数据库模型定义</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>// Prisma schema 定义
+</span></span><span class=line><span class=cl>model Task {
+</span></span><span class=line><span class=cl>  id          String   @id @default(uuid())
+</span></span><span class=line><span class=cl>  title       String
+</span></span><span class=line><span class=cl>  description String?
+</span></span><span class=line><span class=cl>  status      String   @default(&#34;todo&#34;)
+</span></span><span class=line><span class=cl>  priority    String   @default(&#34;medium&#34;)
+</span></span><span class=line><span class=cl>  dueDate     DateTime?
+</span></span><span class=line><span class=cl>  tags        String[]
+</span></span><span class=line><span class=cl>  createdAt   DateTime @default(now())
+</span></span><span class=line><span class=cl>  updatedAt   DateTime @updatedAt
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></td></tr></table></div></div><p><strong>模型设计</strong>：</p><ul><li><strong>UUID 主键</strong>：使用 UUID 作为主键，提高安全性和分布式兼容性</li><li><strong>默认值</strong>：为常用字段提供合理的默认值</li><li><strong>时间戳</strong>：自动记录创建和更新时间</li></ul><h4 id=3-数据库迁移管理>3. 数据库迁移管理</h4><p>数据库迁移是确保数据库结构与代码同步的关键环节。在 TactiCore 中，我们通过以下步骤实现迁移：</p><ol><li><p><strong>创建迁移文件</strong>：在 docker 容器控制台</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>npx prisma migrate dev --name init
+</span></span></code></pre></td></tr></table></div></div><p>这个命令会：</p><ul><li>检测模型变化</li><li>生成迁移 SQL 文件</li><li>应用迁移到数据库</li><li>重新生成 Prisma 客户端</li></ul></li><li><p><strong>迁移文件结构</strong>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>prisma/migrations/
+</span></span><span class=line><span class=cl>├── 20250415053129_init/
+</span></span><span class=line><span class=cl>│   └── migration.sql
+</span></span><span class=line><span class=cl>└── migration_lock.toml
+</span></span></code></pre></td></tr></table></div></div></li><li><p><strong>迁移文件内容</strong>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-sql data-lang=sql><span class=line><span class=cl><span class=c1>-- CreateTable
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>CREATE</span><span class=w> </span><span class=k>TABLE</span><span class=w> </span><span class=s2>&#34;Task&#34;</span><span class=w> </span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s2>&#34;id&#34;</span><span class=w> </span><span class=nb>TEXT</span><span class=w> </span><span class=k>NOT</span><span class=w> </span><span class=k>NULL</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s2>&#34;title&#34;</span><span class=w> </span><span class=nb>TEXT</span><span class=w> </span><span class=k>NOT</span><span class=w> </span><span class=k>NULL</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s2>&#34;description&#34;</span><span class=w> </span><span class=nb>TEXT</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s2>&#34;status&#34;</span><span class=w> </span><span class=nb>TEXT</span><span class=w> </span><span class=k>NOT</span><span class=w> </span><span class=k>NULL</span><span class=w> </span><span class=k>DEFAULT</span><span class=w> </span><span class=s1>&#39;todo&#39;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s2>&#34;priority&#34;</span><span class=w> </span><span class=nb>TEXT</span><span class=w> </span><span class=k>NOT</span><span class=w> </span><span class=k>NULL</span><span class=w> </span><span class=k>DEFAULT</span><span class=w> </span><span class=s1>&#39;medium&#39;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s2>&#34;dueDate&#34;</span><span class=w> </span><span class=k>TIMESTAMP</span><span class=p>(</span><span class=mi>3</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s2>&#34;tags&#34;</span><span class=w> </span><span class=nb>TEXT</span><span class=p>[],</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s2>&#34;createdAt&#34;</span><span class=w> </span><span class=k>TIMESTAMP</span><span class=p>(</span><span class=mi>3</span><span class=p>)</span><span class=w> </span><span class=k>NOT</span><span class=w> </span><span class=k>NULL</span><span class=w> </span><span class=k>DEFAULT</span><span class=w> </span><span class=k>CURRENT_TIMESTAMP</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=s2>&#34;updatedAt&#34;</span><span class=w> </span><span class=k>TIMESTAMP</span><span class=p>(</span><span class=mi>3</span><span class=p>)</span><span class=w> </span><span class=k>NOT</span><span class=w> </span><span class=k>NULL</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>CONSTRAINT</span><span class=w> </span><span class=s2>&#34;Task_pkey&#34;</span><span class=w> </span><span class=k>PRIMARY</span><span class=w> </span><span class=k>KEY</span><span class=w> </span><span class=p>(</span><span class=s2>&#34;id&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>);</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div></li><li><p><strong>自动化迁移</strong>：
+在 Docker 环境中，我们通过初始化脚本自动应用迁移：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=cp>#!/bin/sh
+</span></span></span><span class=line><span class=cl><span class=cp></span><span class=c1># 等待数据库准备就绪</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;等待数据库准备就绪...&#34;</span>
+</span></span><span class=line><span class=cl>sleep <span class=m>5</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 运行 Prisma 迁移</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;运行数据库迁移...&#34;</span>
+</span></span><span class=line><span class=cl>npx prisma migrate deploy
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 生成 Prisma 客户端</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;生成 Prisma 客户端...&#34;</span>
+</span></span><span class=line><span class=cl>npx prisma generate
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;数据库初始化完成&#34;</span>
+</span></span></code></pre></td></tr></table></div></div></li></ol><p><strong>迁移策略</strong>：</p><ul><li><strong>开发环境</strong>：使用 <code>migrate dev</code> 命令，自动应用迁移并更新客户端</li><li><strong>生产环境</strong>：使用 <code>migrate deploy</code> 命令，仅应用已有迁移，不修改数据库结构</li><li><strong>版本控制</strong>：迁移文件纳入版本控制，确保团队间数据库结构一致</li></ul><hr><h3 id=五任务管理模块实现>五、任务管理模块实现</h3><p>任务管理模块是系统的核心业务模块，实现了任务的 CRUD 操作。</p><h4 id=1-数据模型定义>1. 数据模型定义</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// 任务状态枚举
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=kr>enum</span> <span class=nx>TaskStatus</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>TODO</span> <span class=o>=</span> <span class=s2>&#34;todo&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>IN_PROGRESS</span> <span class=o>=</span> <span class=s2>&#34;inProgress&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>COMPLETED</span> <span class=o>=</span> <span class=s2>&#34;completed&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 任务优先级枚举
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=kr>enum</span> <span class=nx>TaskPriority</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>LOW</span> <span class=o>=</span> <span class=s2>&#34;low&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>MEDIUM</span> <span class=o>=</span> <span class=s2>&#34;medium&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>HIGH</span> <span class=o>=</span> <span class=s2>&#34;high&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 创建任务 DTO
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=kr>class</span> <span class=nx>CreateTaskDto</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiProperty</span><span class=p>({</span> <span class=nx>description</span><span class=o>:</span> <span class=s2>&#34;任务标题&#34;</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@IsString</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=nx>title</span>: <span class=kt>string</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiProperty</span><span class=p>({</span> <span class=nx>description</span><span class=o>:</span> <span class=s2>&#34;任务描述&#34;</span><span class=p>,</span> <span class=nx>required</span>: <span class=kt>false</span><span class=p>,</span> <span class=nx>nullable</span>: <span class=kt>true</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@IsString</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@IsOptional</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=nx>description</span>: <span class=kt>string</span> <span class=o>|</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiProperty</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>    <span class=nx>description</span><span class=o>:</span> <span class=s2>&#34;任务状态&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=kr>enum</span><span class=o>:</span> <span class=nx>TaskStatus</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=k>default</span><span class=o>:</span> <span class=nx>TaskStatus</span><span class=p>.</span><span class=nx>TODO</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@IsEnum</span><span class=p>(</span><span class=nx>TaskStatus</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@IsOptional</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=nx>status?</span>: <span class=kt>TaskStatus</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 其他字段...
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 更新任务 DTO
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=kr>class</span> <span class=nx>UpdateTaskDto</span> <span class=kr>extends</span> <span class=nx>CreateTaskDto</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 继承自 CreateTaskDto，不需要额外字段
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 任务响应 DTO
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=kr>class</span> <span class=nx>TaskResponseDto</span> <span class=kr>extends</span> <span class=nx>CreateTaskDto</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiProperty</span><span class=p>({</span> <span class=nx>description</span><span class=o>:</span> <span class=s2>&#34;任务ID&#34;</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@IsUUID</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=nx>id</span>: <span class=kt>string</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiProperty</span><span class=p>({</span> <span class=nx>description</span><span class=o>:</span> <span class=s2>&#34;创建时间&#34;</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@IsDate</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=nx>createdAt</span>: <span class=kt>Date</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiProperty</span><span class=p>({</span> <span class=nx>description</span><span class=o>:</span> <span class=s2>&#34;更新时间&#34;</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@IsDate</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=nx>updatedAt</span>: <span class=kt>Date</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>DTO 设计</strong>：</p><ul><li><strong>继承关系</strong>：<code>UpdateTaskDto</code> 继承自 <code>CreateTaskDto</code>，避免代码重复</li><li><strong>验证装饰器</strong>：使用 <code>class-validator</code> 装饰器进行输入验证</li><li><strong>API 文档</strong>：使用 <code>@ApiProperty</code> 装饰器生成 Swagger 文档</li><li><strong>类型安全</strong>：使用 TypeScript 类型系统确保类型安全</li></ul><h4 id=2-任务服务实现>2. 任务服务实现</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@Injectable</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>TaskService</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>(</span><span class=kr>private</span> <span class=kr>readonly</span> <span class=nx>prisma</span>: <span class=kt>PrismaService</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 类型转换函数
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kr>private</span> <span class=nx>convertToTaskResponseDto</span><span class=p>(</span><span class=nx>task</span>: <span class=kt>any</span><span class=p>)</span><span class=o>:</span> <span class=nx>TaskResponseDto</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=p>...</span><span class=nx>task</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>status</span>: <span class=kt>task.status</span> <span class=kr>as</span> <span class=nx>TaskStatus</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>priority</span>: <span class=kt>task.priority</span> <span class=kr>as</span> <span class=nx>TaskPriority</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 创建任务
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kr>async</span> <span class=nx>createTask</span><span class=p>(</span><span class=nx>createTaskDto</span>: <span class=kt>CreateTaskDto</span><span class=p>)</span><span class=o>:</span> <span class=nx>Promise</span><span class=p>&lt;</span><span class=nt>TaskResponseDto</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>task</span> <span class=o>=</span> <span class=k>await</span> <span class=k>this</span><span class=p>.</span><span class=nx>prisma</span><span class=p>.</span><span class=nx>task</span><span class=p>.</span><span class=nx>create</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>data</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=p>...</span><span class=nx>createTaskDto</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nx>status</span>: <span class=kt>createTaskDto.status</span> <span class=o>||</span> <span class=nx>TaskStatus</span><span class=p>.</span><span class=nx>TODO</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nx>priority</span>: <span class=kt>createTaskDto.priority</span> <span class=o>||</span> <span class=nx>TaskPriority</span><span class=p>.</span><span class=nx>MEDIUM</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>this</span><span class=p>.</span><span class=nx>convertToTaskResponseDto</span><span class=p>(</span><span class=nx>task</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 获取任务列表
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kr>async</span> <span class=nx>getTasks</span><span class=p>(</span><span class=nx>filter</span>: <span class=kt>TaskFilterDto</span><span class=p>)</span><span class=o>:</span> <span class=nx>Promise</span><span class=p>&lt;</span><span class=nt>TaskResponseDto</span><span class=err>[]</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>where</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=p>...(</span><span class=nx>filter</span><span class=p>.</span><span class=nx>status</span> <span class=o>&amp;&amp;</span> <span class=p>{</span> <span class=nx>status</span>: <span class=kt>filter.status</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>      <span class=p>...(</span><span class=nx>filter</span><span class=p>.</span><span class=nx>priority</span> <span class=o>&amp;&amp;</span> <span class=p>{</span> <span class=nx>priority</span>: <span class=kt>filter.priority</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>      <span class=p>...(</span><span class=nx>filter</span><span class=p>.</span><span class=nx>tags</span> <span class=o>&amp;&amp;</span> <span class=p>{</span> <span class=nx>tags</span><span class=o>:</span> <span class=p>{</span> <span class=nx>hasSome</span>: <span class=kt>filter.tags</span> <span class=p>}</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>      <span class=p>...(</span><span class=nx>filter</span><span class=p>.</span><span class=nx>startDate</span> <span class=o>&amp;&amp;</span> <span class=p>{</span> <span class=nx>dueDate</span><span class=o>:</span> <span class=p>{</span> <span class=nx>gte</span>: <span class=kt>filter.startDate</span> <span class=p>}</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>      <span class=p>...(</span><span class=nx>filter</span><span class=p>.</span><span class=nx>endDate</span> <span class=o>&amp;&amp;</span> <span class=p>{</span> <span class=nx>dueDate</span><span class=o>:</span> <span class=p>{</span> <span class=nx>lte</span>: <span class=kt>filter.endDate</span> <span class=p>}</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>tasks</span> <span class=o>=</span> <span class=k>await</span> <span class=k>this</span><span class=p>.</span><span class=nx>prisma</span><span class=p>.</span><span class=nx>task</span><span class=p>.</span><span class=nx>findMany</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>where</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>orderBy</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>createdAt</span><span class=o>:</span> <span class=s2>&#34;desc&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>tasks</span><span class=p>.</span><span class=nx>map</span><span class=p>((</span><span class=nx>task</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=k>this</span><span class=p>.</span><span class=nx>convertToTaskResponseDto</span><span class=p>(</span><span class=nx>task</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 其他方法...
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>服务设计</strong>：</p><ul><li><strong>依赖注入</strong>：通过构造函数注入 <code>PrismaService</code></li><li><strong>类型转换</strong>：使用 <code>convertToTaskResponseDto</code> 方法确保返回类型正确</li><li><strong>过滤条件</strong>：支持多条件组合过滤</li><li><strong>默认值</strong>：为可选字段提供合理的默认值</li></ul><h4 id=3-任务控制器实现>3. 任务控制器实现</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@ApiTags</span><span class=p>(</span><span class=s2>&#34;tasks&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kd>@Controller</span><span class=p>(</span><span class=s2>&#34;tasks&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kd>@UseGuards</span><span class=p>(</span><span class=nx>JwtAuthGuard</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>TaskController</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>(</span><span class=kr>private</span> <span class=kr>readonly</span> <span class=nx>taskService</span>: <span class=kt>TaskService</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kd>@Post</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiOperation</span><span class=p>({</span> <span class=nx>summary</span><span class=o>:</span> <span class=s2>&#34;创建新任务&#34;</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=kd>@ApiResponse</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>    <span class=nx>status</span>: <span class=kt>201</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>description</span><span class=o>:</span> <span class=s2>&#34;任务创建成功&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=kr>type</span><span class=o>:</span> <span class=nx>TaskResponseDto</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=kr>async</span> <span class=nx>createTask</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=kd>@Body</span><span class=p>()</span> <span class=nx>createTaskDto</span>: <span class=kt>CreateTaskDto</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span><span class=o>:</span> <span class=nx>Promise</span><span class=p>&lt;</span><span class=nt>TaskResponseDto</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>this</span><span class=p>.</span><span class=nx>taskService</span><span class=p>.</span><span class=nx>createTask</span><span class=p>(</span><span class=nx>createTaskDto</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 其他端点...
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>控制器设计</strong>：</p><ul><li><strong>路由定义</strong>：使用装饰器定义 HTTP 方法和路径</li><li><strong>参数绑定</strong>：使用装饰器绑定请求参数</li><li><strong>API 文档</strong>：使用 Swagger 装饰器生成 API 文档</li><li><strong>认证保护</strong>：使用 <code>JwtAuthGuard</code> 保护所有端点</li></ul><hr><h3 id=六docker-部署配置>六、Docker 部署配置</h3><p>TactiCore 采用 Docker 和 Docker Compose 实现容器化部署，确保环境一致性。</p><h4 id=1-开发环境-dockerfile>1. 开发环境 Dockerfile</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=line><span class=cl><span class=c># backend/Dockerfile.dev</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine AS development</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># 安装开发依赖</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm install -g nodemon<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm ci<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> . .<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># 启动开发服务器</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npx prisma generate<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;npm&#34;</span><span class=p>,</span> <span class=s2>&#34;run&#34;</span><span class=p>,</span> <span class=s2>&#34;start:dev:docker&#34;</span><span class=p>]</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p><strong>开发环境特点</strong>：</p><ul><li><strong>热重载</strong>：使用 nodemon 实现代码变更自动重启</li><li><strong>依赖安装</strong>：使用 <code>npm ci</code> 确保依赖版本一致性</li><li><strong>Prisma 生成</strong>：在构建时生成 Prisma 客户端</li></ul><h4 id=2-生产环境-dockerfile>2. 生产环境 Dockerfile</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=line><span class=cl><span class=c># 开发阶段</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine AS development</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm ci<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> . .<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npx prisma generate<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm run build<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># 生产阶段</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>FROM</span><span class=s> node:22-alpine AS production</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>WORKDIR</span><span class=s> /app</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>development /app/dist ./dist<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>development /app/package*.json ./<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>development /app/node_modules/.prisma ./node_modules/.prisma<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>development /app/prisma ./prisma<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>COPY</span> --from<span class=o>=</span>development /app/scripts ./scripts<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> npm ci --production<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># 设置脚本权限</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>RUN</span> chmod +x ./scripts/init-db.sh<span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=c># 使用初始化脚本</span><span class=err>
+</span></span></span><span class=line><span class=cl><span class=err></span><span class=k>CMD</span> <span class=p>[</span><span class=s2>&#34;sh&#34;</span><span class=p>,</span> <span class=s2>&#34;-c&#34;</span><span class=p>,</span> <span class=s2>&#34;./scripts/init-db.sh &amp;&amp; node dist/main.js&#34;</span><span class=p>]</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p><strong>生产环境特点</strong>：</p><ul><li><strong>多阶段构建</strong>：使用多阶段构建减小镜像体积</li><li><strong>依赖优化</strong>：仅安装生产环境依赖</li><li><strong>数据库初始化</strong>：启动时自动运行数据库迁移</li><li><strong>脚本执行</strong>：使用 shell 命令组合多个操作</li></ul><h4 id=3-docker-compose-配置>3. Docker Compose 配置</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>frontend</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>dockerfile</span><span class=p>:</span><span class=w> </span><span class=l>frontend/Dockerfile.prod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>target</span><span class=p>:</span><span class=w> </span><span class=l>prod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;8080:80&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>backend</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>backend</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>context</span><span class=p>:</span><span class=w> </span><span class=l>./backend</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>dockerfile</span><span class=p>:</span><span class=w> </span><span class=l>Dockerfile.prod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>env_file</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./backend/.env</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>NODE_ENV=production</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>./backend/.env:/app/.env</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>mongo</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>postgres</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;3000:3000&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>mongo</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>mongo:6</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>mongo_data:/data/db</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>MONGO_INITDB_ROOT_USERNAME=root</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>MONGO_INITDB_ROOT_PASSWORD=rootpassword123</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;27017:27017&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>postgres</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>postgres:16.8-alpine3.20</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>POSTGRES_USER=postgres</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>POSTGRES_PASSWORD=postgres123</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>POSTGRES_DB=tacticore</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>postgres_data:/var/lib/postgresql/data</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;5432:5432&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>healthcheck</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>test</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=s2>&#34;CMD-SHELL&#34;</span><span class=p>,</span><span class=w> </span><span class=s2>&#34;pg_isready -U postgres&#34;</span><span class=p>]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>interval</span><span class=p>:</span><span class=w> </span><span class=l>5s</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>timeout</span><span class=p>:</span><span class=w> </span><span class=l>5s</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>retries</span><span class=p>:</span><span class=w> </span><span class=m>5</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>mongo_data</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>postgres_data</span><span class=p>:</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p><strong>Compose 配置特点</strong>：</p><ul><li><strong>服务依赖</strong>：使用 <code>depends_on</code> 定义服务启动顺序</li><li><strong>环境变量</strong>：通过 <code>env_file</code> 和 <code>environment</code> 配置环境变量</li><li><strong>数据持久化</strong>：使用命名卷保存数据库数据</li><li><strong>健康检查</strong>：为数据库服务配置健康检查</li><li><strong>端口映射</strong>：将容器端口映射到主机端口</li></ul><hr><h3 id=七api-测试与文档>七、API 测试与文档</h3><p>我们使用 Postman 进行 API 测试，并生成 Swagger 文档。</p><h4 id=1-postman-测试集设计>1. Postman 测试集设计</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;info&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;TactiCore Task API&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;description&#34;</span><span class=p>:</span> <span class=s2>&#34;测试 TactiCore 任务管理 API&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;schema&#34;</span><span class=p>:</span> <span class=s2>&#34;https://schema.getpostman.com/json/collection/v2.1.0/collection.json&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;item&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;创建任务&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;request&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;method&#34;</span><span class=p>:</span> <span class=s2>&#34;POST&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;header&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>          <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;Content-Type&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;application/json&#34;</span>
+</span></span><span class=line><span class=cl>          <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>],</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;body&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;mode&#34;</span><span class=p>:</span> <span class=s2>&#34;raw&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;raw&#34;</span><span class=p>:</span> <span class=s2>&#34;{\n  \&#34;title\&#34;: \&#34;测试任务\&#34;,\n  \&#34;description\&#34;: \&#34;这是一个测试任务\&#34;,\n  \&#34;status\&#34;: \&#34;todo\&#34;,\n  \&#34;priority\&#34;: \&#34;medium\&#34;,\n  \&#34;dueDate\&#34;: \&#34;2024-12-31T23:59:59Z\&#34;,\n  \&#34;tags\&#34;: [\&#34;测试\&#34;, \&#34;示例\&#34;]\n}&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>},</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;url&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;raw&#34;</span><span class=p>:</span> <span class=s2>&#34;{{base_url}}/tasks&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;host&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;{{base_url}}&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;path&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;tasks&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=p>},</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;description&#34;</span><span class=p>:</span> <span class=s2>&#34;创建一个新的任务&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 其他请求...
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;auth&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;jwt&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;jwt&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;secret&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;tacticore-jwt-secret&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;algorithm&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;HS256&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;headerPrefix&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;Bearer&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;variable&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;base_url&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;http://localhost:3000&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;jwt_token&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;tacticore-jwt-secret&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;task_id&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;1&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>测试集特点</strong>：</p><ul><li><strong>环境变量</strong>：使用变量定义基础 URL 和认证令牌</li><li><strong>JWT 认证</strong>：配置 JWT 认证方式</li><li><strong>请求组织</strong>：按功能模块组织请求</li><li><strong>请求描述</strong>：为每个请求添加详细描述</li></ul><h4 id=2-jwt-认证配置>2. JWT 认证配置</h4><p>在 Postman 中，JWT 认证通过以下方式配置：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=s2>&#34;auth&#34;</span><span class=err>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;jwt&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;jwt&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;secret&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;tacticore-jwt-secret&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;algorithm&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;HS256&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=s2>&#34;headerPrefix&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;value&#34;</span><span class=p>:</span> <span class=s2>&#34;Bearer&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>认证配置特点</strong>：</p><ul><li><strong>密钥配置</strong>：设置 JWT 签名密钥</li><li><strong>算法指定</strong>：使用 HS256 算法</li><li><strong>前缀设置</strong>：设置 Bearer 前缀</li></ul><h4 id=3-测试流程>3. 测试流程</h4><ol><li><p><strong>创建任务</strong>：</p><ul><li>发送 POST 请求到 <code>/tasks</code> 端点</li><li>请求体包含任务信息</li><li>从响应中获取任务 ID</li></ul></li><li><p><strong>更新任务</strong>：</p><ul><li>将任务 ID 设置到环境变量 <code>task_id</code></li><li>发送 PUT 请求到 <code>/tasks/{{task_id}}</code> 端点</li><li>请求体包含更新的任务信息</li></ul></li><li><p><strong>获取任务</strong>：</p><ul><li>发送 GET 请求到 <code>/tasks/{{task_id}}</code> 端点</li><li>验证返回的任务信息</li></ul></li><li><p><strong>删除任务</strong>：</p><ul><li>发送 DELETE 请求到 <code>/tasks/{{task_id}}</code> 端点</li><li>验证任务已被删除</li></ul></li></ol><hr><h3 id=八总结与展望>八、总结与展望</h3><p>TactiCore 后端采用模块化设计，实现了认证、配置、数据库和任务管理等功能。通过 Docker 容器化部署，确保了环境一致性和部署便捷性。</p><p><strong>技术亮点</strong>：</p><ul><li><strong>类型安全</strong>：全面使用 TypeScript 类型系统</li><li><strong>模块化设计</strong>：各功能模块高度解耦</li><li><strong>依赖注入</strong>：通过 NestJS 依赖注入实现松耦合</li><li><strong>数据库迁移</strong>：使用 Prisma 管理数据库迁移</li><li><strong>容器化部署</strong>：基于 Docker 实现环境一致性</li></ul><p><strong>未来展望</strong>：</p><ul><li><strong>缓存层</strong>：引入 Redis 缓存提高性能</li><li><strong>消息队列</strong>：集成消息队列处理异步任务</li><li><strong>监控系统</strong>：添加 Prometheus 和 Grafana 监控</li><li><strong>CI/CD</strong>：实现自动化测试和部署流程</li></ul><p>通过这一系列模块的精心设计和实现，TactiCore 后端为全栈博客系统提供了坚实的技术基础，为后续功能扩展和性能优化奠定了良好的架构基础。</p><hr></section><footer class=article-footer><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><script src=//unpkg.com/@waline/client@v2/dist/waline.js></script><link href=//unpkg.com/@waline/client@v2/dist/waline.css rel=stylesheet><div id=waline class=waline-container></div><style>.waline-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding);--waline-font-size:var(--article-font-size)}.waline-container .wl-count{color:var(--card-text-color-main)}</style><script>Waline.init({avatar:"",dark:'html[data-scheme="dark"]',el:"#waline",emoji:["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],lang:"zh-CN",locale:{admin:"Admin",placeholder:"说点啥~"},requiredMeta:["nick","mail","url"],serverURL:"comment.cycbloom.com"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2025 鎏金阁</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.30.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

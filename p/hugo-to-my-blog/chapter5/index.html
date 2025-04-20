@@ -1,0 +1,434 @@
+<!doctype html><html lang=zh-CN dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="深入解析 TactiCore 认证系统的设计与实现过程"><title>Chapter5: 认证系统设计与实现</title>
+<link rel=canonical href=https://blog.cycbloom.com/p/hugo-to-my-blog/chapter5/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Chapter5: 认证系统设计与实现"><meta property='og:description' content="深入解析 TactiCore 认证系统的设计与实现过程"><meta property='og:url' content='https://blog.cycbloom.com/p/hugo-to-my-blog/chapter5/'><meta property='og:site_name' content='鎏金阁'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2025-04-19T16:00:00+08:00'><meta property='article:modified_time' content='2025-04-19T16:00:00+08:00'><meta name=twitter:title content="Chapter5: 认证系统设计与实现"><meta name=twitter:description content="深入解析 TactiCore 认证系统的设计与实现过程"><link rel="shortcut icon" href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_84d7cd848dfd0892.png width=300 height=299 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🦄</span></figure><div class=site-meta><h1 class=site-name><a href=/>鎏金阁</a></h1><h2 class=site-description>🔥点燃灵感，共享思维的篝火</h2></div></header><ol class=menu-social><li><a href=https://github.com/Cycbloom target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#chapter5-认证系统设计与实现>Chapter5: 认证系统设计与实现</a><ol><li><a href=#一后端认证系统设计>一、后端认证系统设计</a><ol><li><a href=#1-用户数据模型设计>1. 用户数据模型设计</a></li><li><a href=#2-数据库初始化>2. 数据库初始化</a></li><li><a href=#3-用户服务实现>3. 用户服务实现</a></li><li><a href=#4-认证服务设计>4. 认证服务设计</a></li><li><a href=#5-currentuser-装饰器>5. CurrentUser 装饰器</a></li><li><a href=#6-cors-配置>6. CORS 配置</a></li></ol></li><li><a href=#二前端认证系统实现>二、前端认证系统实现</a><ol><li><a href=#1-api-设计>1. API 设计</a></li><li><a href=#2-认证上下文>2. 认证上下文</a></li><li><a href=#3-登录组件实现>3. 登录组件实现</a></li></ol></li><li><a href=#三总结与展望>三、总结与展望</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/p/hugo-to-my-blog/chapter5/>Chapter5: 认证系统设计与实现</a></h2><h3 class=article-subtitle>深入解析 TactiCore 认证系统的设计与实现过程</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Apr 19, 2025</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 5 分钟</time></div></footer></div></header><section class=article-content><hr><h2 id=chapter5-认证系统设计与实现>Chapter5: 认证系统设计与实现</h2><p>——从后端到前端的完整认证流程</p><hr><h3 id=一后端认证系统设计>一、后端认证系统设计</h3><p>TactiCore 的认证系统采用 JWT (JSON Web Token) 实现无状态认证，结合 Prisma ORM 进行用户数据管理。</p><h4 id=1-用户数据模型设计>1. 用户数据模型设计</h4><p>首先，我们在 Prisma schema 中定义用户模型：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>model User {
+</span></span><span class=line><span class=cl>  id        String   @id @default(uuid())
+</span></span><span class=line><span class=cl>  email     String   @unique
+</span></span><span class=line><span class=cl>  username  String   @unique
+</span></span><span class=line><span class=cl>  password  String
+</span></span><span class=line><span class=cl>  createdAt DateTime @default(now())
+</span></span><span class=line><span class=cl>  updatedAt DateTime @updatedAt
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></td></tr></table></div></div><p><strong>模型特点</strong>：</p><ul><li><strong>UUID 主键</strong>：使用 UUID 作为主键，提高安全性和分布式兼容性</li><li><strong>唯一约束</strong>：邮箱和用户名设置唯一约束，确保数据唯一性</li><li><strong>时间戳</strong>：自动记录创建和更新时间</li></ul><h4 id=2-数据库初始化>2. 数据库初始化</h4><p>通过 <code>seed.ts</code> 实现数据库初始化，创建默认用户：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>async</span> <span class=kd>function</span> <span class=nx>main() {</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 创建默认管理员用户
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kr>const</span> <span class=nx>adminPassword</span> <span class=o>=</span> <span class=k>await</span> <span class=nx>bcryptjs</span><span class=p>.</span><span class=nx>hash</span><span class=p>(</span><span class=s2>&#34;admin123&#34;</span><span class=p>,</span> <span class=mi>10</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>await</span> <span class=nx>prisma</span><span class=p>.</span><span class=nx>user</span><span class=p>.</span><span class=nx>upsert</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>    <span class=nx>where</span><span class=o>:</span> <span class=p>{</span> <span class=nx>email</span><span class=o>:</span> <span class=s2>&#34;admin@example.com&#34;</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=nx>update</span><span class=o>:</span> <span class=p>{},</span>
+</span></span><span class=line><span class=cl>    <span class=nx>create</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>email</span><span class=o>:</span> <span class=s2>&#34;admin@example.com&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>username</span><span class=o>:</span> <span class=s2>&#34;admin&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>password</span>: <span class=kt>adminPassword</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// 创建测试用户
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kr>const</span> <span class=nx>testPassword</span> <span class=o>=</span> <span class=k>await</span> <span class=nx>bcryptjs</span><span class=p>.</span><span class=nx>hash</span><span class=p>(</span><span class=s2>&#34;test123&#34;</span><span class=p>,</span> <span class=mi>10</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>await</span> <span class=nx>prisma</span><span class=p>.</span><span class=nx>user</span><span class=p>.</span><span class=nx>upsert</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>    <span class=nx>where</span><span class=o>:</span> <span class=p>{</span> <span class=nx>email</span><span class=o>:</span> <span class=s2>&#34;test@example.com&#34;</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=nx>update</span><span class=o>:</span> <span class=p>{},</span>
+</span></span><span class=line><span class=cl>    <span class=nx>create</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>email</span><span class=o>:</span> <span class=s2>&#34;test@example.com&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>username</span><span class=o>:</span> <span class=s2>&#34;test&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>password</span>: <span class=kt>testPassword</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=p>});</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>初始化特点</strong>：</p><ul><li><strong>密码加密</strong>：使用 bcryptjs 进行密码加密</li><li><strong>upsert 操作</strong>：使用 upsert 确保数据幂等性</li><li><strong>默认用户</strong>：创建管理员和测试用户</li></ul><h4 id=3-用户服务实现>3. 用户服务实现</h4><p>用户服务负责处理用户相关的业务逻辑：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@Injectable</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>UsersService</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>(</span><span class=kr>private</span> <span class=nx>prisma</span>: <span class=kt>PrismaService</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>async</span> <span class=nx>create</span><span class=p>(</span><span class=nx>createUserDto</span>: <span class=kt>CreateUserDto</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>hashedPassword</span> <span class=o>=</span> <span class=k>await</span> <span class=nx>bcrypt</span><span class=p>.</span><span class=nx>hash</span><span class=p>(</span><span class=nx>createUserDto</span><span class=p>.</span><span class=nx>password</span><span class=p>,</span> <span class=mi>10</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>this</span><span class=p>.</span><span class=nx>prisma</span><span class=p>.</span><span class=nx>user</span><span class=p>.</span><span class=nx>create</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>data</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=p>...</span><span class=nx>createUserDto</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nx>password</span>: <span class=kt>hashedPassword</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>async</span> <span class=nx>findOne</span><span class=p>(</span><span class=nx>id</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>this</span><span class=p>.</span><span class=nx>prisma</span><span class=p>.</span><span class=nx>user</span><span class=p>.</span><span class=nx>findUnique</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>where</span><span class=o>:</span> <span class=p>{</span> <span class=nx>id</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>async</span> <span class=nx>findByEmail</span><span class=p>(</span><span class=nx>email</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=k>this</span><span class=p>.</span><span class=nx>prisma</span><span class=p>.</span><span class=nx>user</span><span class=p>.</span><span class=nx>findUnique</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>where</span><span class=o>:</span> <span class=p>{</span> <span class=nx>email</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>服务特点</strong>：</p><ul><li><strong>依赖注入</strong>：通过构造函数注入 PrismaService</li><li><strong>密码加密</strong>：使用 bcrypt 进行密码加密</li><li><strong>查询方法</strong>：提供多种查询方式</li></ul><h4 id=4-认证服务设计>4. 认证服务设计</h4><p>认证服务处理登录和令牌生成：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>@Injectable</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>class</span> <span class=nx>AuthService</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>constructor</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=kr>private</span> <span class=nx>usersService</span>: <span class=kt>UsersService</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=kr>private</span> <span class=nx>jwtService</span>: <span class=kt>JwtService</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>async</span> <span class=nx>validateUser</span><span class=p>(</span><span class=nx>email</span>: <span class=kt>string</span><span class=p>,</span> <span class=nx>password</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>user</span> <span class=o>=</span> <span class=k>await</span> <span class=k>this</span><span class=p>.</span><span class=nx>usersService</span><span class=p>.</span><span class=nx>findByEmail</span><span class=p>(</span><span class=nx>email</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>user</span> <span class=o>&amp;&amp;</span> <span class=p>(</span><span class=k>await</span> <span class=nx>bcrypt</span><span class=p>.</span><span class=nx>compare</span><span class=p>(</span><span class=nx>password</span><span class=p>,</span> <span class=nx>user</span><span class=p>.</span><span class=nx>password</span><span class=p>)))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=kr>const</span> <span class=p>{</span> <span class=nx>password</span><span class=p>,</span> <span class=p>...</span><span class=nx>result</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>user</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=nx>result</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=kc>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>async</span> <span class=nx>login</span><span class=p>(</span><span class=nx>user</span>: <span class=kt>any</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>payload</span> <span class=o>=</span> <span class=p>{</span> <span class=nx>email</span>: <span class=kt>user.email</span><span class=p>,</span> <span class=nx>sub</span>: <span class=kt>user.id</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>access_token</span>: <span class=kt>this.jwtService.sign</span><span class=p>(</span><span class=nx>payload</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>认证特点</strong>：</p><ul><li><strong>密码验证</strong>：使用 bcrypt 进行密码比对</li><li><strong>JWT 生成</strong>：使用 JwtService 生成访问令牌</li><li><strong>数据脱敏</strong>：返回用户信息时移除密码字段</li></ul><h4 id=5-currentuser-装饰器>5. CurrentUser 装饰器</h4><p>自定义装饰器用于获取当前用户信息：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>export</span> <span class=kr>const</span> <span class=nx>CurrentUser</span> <span class=o>=</span> <span class=nx>createParamDecorator</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>  <span class=p>(</span><span class=nx>data</span>: <span class=kt>unknown</span><span class=p>,</span> <span class=nx>ctx</span>: <span class=kt>ExecutionContext</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>request</span> <span class=o>=</span> <span class=nx>ctx</span><span class=p>.</span><span class=nx>switchToHttp</span><span class=p>().</span><span class=nx>getRequest</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>request</span><span class=p>.</span><span class=nx>user</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>装饰器特点</strong>：</p><ul><li><strong>参数装饰器</strong>：使用 createParamDecorator 创建</li><li><strong>上下文访问</strong>：通过 ExecutionContext 访问请求上下文</li><li><strong>用户信息提取</strong>：从请求对象中提取用户信息</li></ul><h4 id=6-cors-配置>6. CORS 配置</h4><p>在 <code>main.ts</code> 中配置跨域资源共享：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>enableCors</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>origin</span><span class=o>:</span> <span class=p>[</span><span class=s2>&#34;http://localhost:5173&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nx>methods</span><span class=o>:</span> <span class=s2>&#34;GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>credentials</span>: <span class=kt>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>CORS 特点</strong>：</p><ul><li><strong>源限制</strong>：只允许特定前端域名访问</li><li><strong>方法支持</strong>：支持常用 HTTP 方法</li><li><strong>凭证支持</strong>：允许携带认证信息</li></ul><h3 id=二前端认证系统实现>二、前端认证系统实现</h3><p>前端认证系统采用 React Context 和自定义 Hook 实现状态管理。</p><h4 id=1-api-设计>1. API 设计</h4><p>在 <code>api</code> 目录下定义认证相关的 API 请求：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// auth.ts
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=kr>const</span> <span class=nx>authApi</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>login</span><span class=o>:</span> <span class=p>(</span><span class=nx>data</span>: <span class=kt>LoginData</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=nx>request</span><span class=p>.</span><span class=nx>post</span><span class=p>(</span><span class=s2>&#34;/auth/login&#34;</span><span class=p>,</span> <span class=nx>data</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>getCurrentUser</span><span class=o>:</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=nx>request</span><span class=p>.</span><span class=kr>get</span><span class=p>(</span><span class=s2>&#34;/auth/me&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// request.ts
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>request</span> <span class=o>=</span> <span class=nx>axios</span><span class=p>.</span><span class=nx>create</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>baseURL</span>: <span class=kt>import.meta.env.VITE_API_URL</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>timeout</span>: <span class=kt>10000</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 请求拦截器
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>request</span><span class=p>.</span><span class=nx>interceptors</span><span class=p>.</span><span class=nx>request</span><span class=p>.</span><span class=nx>use</span><span class=p>((</span><span class=nx>config</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>token</span> <span class=o>=</span> <span class=nx>localStorage</span><span class=p>.</span><span class=nx>getItem</span><span class=p>(</span><span class=s2>&#34;token&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=nx>token</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>config</span><span class=p>.</span><span class=nx>headers</span><span class=p>.</span><span class=nx>Authorization</span> <span class=o>=</span> <span class=sb>`Bearer </span><span class=si>${</span><span class=nx>token</span><span class=si>}</span><span class=sb>`</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>config</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 响应拦截器
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>request</span><span class=p>.</span><span class=nx>interceptors</span><span class=p>.</span><span class=nx>response</span><span class=p>.</span><span class=nx>use</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>  <span class=p>(</span><span class=nx>response</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=nx>response</span><span class=p>.</span><span class=nx>data</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=p>(</span><span class=nx>error</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>error</span><span class=p>.</span><span class=nx>response</span><span class=o>?</span><span class=p>.</span><span class=nx>status</span> <span class=o>===</span> <span class=mi>401</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>localStorage</span><span class=p>.</span><span class=nx>removeItem</span><span class=p>(</span><span class=s2>&#34;token&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=nb>window</span><span class=p>.</span><span class=nx>location</span><span class=p>.</span><span class=nx>href</span> <span class=o>=</span> <span class=s2>&#34;/login&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>Promise</span><span class=p>.</span><span class=nx>reject</span><span class=p>(</span><span class=nx>error</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>API 特点</strong>：</p><ul><li><strong>请求封装</strong>：统一处理请求和响应</li><li><strong>令牌管理</strong>：自动添加认证令牌</li><li><strong>错误处理</strong>：统一处理认证错误</li></ul><h4 id=2-认证上下文>2. 认证上下文</h4><p>使用 Context 管理认证状态：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>export</span> <span class=kr>const</span> <span class=nx>AuthProvider</span>: <span class=kt>React.FC</span><span class=o>&lt;</span><span class=p>{</span> <span class=nx>children</span>: <span class=kt>React.ReactNode</span> <span class=p>}</span><span class=o>&gt;</span> <span class=o>=</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>children</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>})</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>[</span><span class=nx>user</span><span class=p>,</span> <span class=nx>setUser</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>&lt;</span><span class=nt>UserData</span> <span class=err>|</span> <span class=na>null</span><span class=p>&gt;(</span><span class=kc>null</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>[</span><span class=nx>token</span><span class=p>,</span> <span class=nx>setToken</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>&lt;</span><span class=nt>string</span> <span class=err>|</span> <span class=na>null</span><span class=p>&gt;(</span><span class=kc>null</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>[</span><span class=nx>isLoading</span><span class=p>,</span> <span class=nx>setIsLoading</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>(</span><span class=kc>true</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nx>useEffect</span><span class=p>(()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>storedToken</span> <span class=o>=</span> <span class=nx>localStorage</span><span class=p>.</span><span class=nx>getItem</span><span class=p>(</span><span class=s2>&#34;token&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>storedToken</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>setToken</span><span class=p>(</span><span class=nx>storedToken</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=nx>authApi</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=nx>getCurrentUser</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=nx>then</span><span class=p>((</span><span class=nx>response</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=nx>setUser</span><span class=p>(</span><span class=nx>response</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=k>catch</span><span class=p>(()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=nx>localStorage</span><span class=p>.</span><span class=nx>removeItem</span><span class=p>(</span><span class=s2>&#34;token&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>          <span class=nx>setToken</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>})</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=k>finally</span><span class=p>(()</span> <span class=o>=&gt;</span> <span class=nx>setIsLoading</span><span class=p>(</span><span class=kc>false</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>setIsLoading</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span> <span class=p>[]);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>login</span> <span class=o>=</span> <span class=kr>async</span> <span class=p>(</span><span class=nx>data</span>: <span class=kt>LoginData</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>response</span> <span class=o>=</span> <span class=k>await</span> <span class=nx>authApi</span><span class=p>.</span><span class=nx>login</span><span class=p>(</span><span class=nx>data</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=p>{</span> <span class=nx>access_token</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>response</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>localStorage</span><span class=p>.</span><span class=nx>setItem</span><span class=p>(</span><span class=s2>&#34;token&#34;</span><span class=p>,</span> <span class=nx>access_token</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setToken</span><span class=p>(</span><span class=nx>access_token</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>userData</span> <span class=o>=</span> <span class=k>await</span> <span class=nx>authApi</span><span class=p>.</span><span class=nx>getCurrentUser</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setUser</span><span class=p>(</span><span class=nx>userData</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>logout</span> <span class=o>=</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>localStorage</span><span class=p>.</span><span class=nx>removeItem</span><span class=p>(</span><span class=s2>&#34;token&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setToken</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setUser</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>AuthContext.Provider</span> <span class=na>value</span><span class=o>=</span><span class=p>{{</span> <span class=nx>user</span><span class=p>,</span> <span class=nx>token</span><span class=p>,</span> <span class=nx>login</span><span class=p>,</span> <span class=nx>logout</span><span class=p>,</span> <span class=nx>isLoading</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>AuthContext.Provider</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>上下文特点</strong>：</p><ul><li><strong>状态管理</strong>：管理用户信息和令牌状态</li><li><strong>自动登录</strong>：启动时自动恢复登录状态</li><li><strong>方法封装</strong>：提供登录和登出方法</li></ul><h4 id=3-登录组件实现>3. 登录组件实现</h4><p>使用 Material-UI 实现登录表单：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=kd>function</span> <span class=nx>LoginForm</span><span class=p>({</span> <span class=nx>onSuccess</span> <span class=p>}</span><span class=o>:</span> <span class=nx>LoginFormProps</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>navigate</span> <span class=o>=</span> <span class=nx>useNavigate</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>{</span> <span class=nx>login</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>useAuth</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>[</span><span class=nx>error</span><span class=p>,</span> <span class=nx>setError</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>(</span><span class=s2>&#34;&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>[</span><span class=nx>loading</span><span class=p>,</span> <span class=nx>setLoading</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>handleSubmit</span> <span class=o>=</span> <span class=kr>async</span> <span class=p>(</span><span class=nx>data</span>: <span class=kt>LoginFormData</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setError</span><span class=p>(</span><span class=s2>&#34;&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setLoading</span><span class=p>(</span><span class=kc>true</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>try</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>await</span> <span class=nx>login</span><span class=p>(</span><span class=nx>data</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=nx>onSuccess</span><span class=o>?</span><span class=p>.();</span>
+</span></span><span class=line><span class=cl>      <span class=nx>navigate</span><span class=p>(</span><span class=s2>&#34;/dashboard&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=nx>err</span>: <span class=kt>any</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>setError</span><span class=p>(</span><span class=nx>err</span><span class=p>.</span><span class=nx>response</span><span class=o>?</span><span class=p>.</span><span class=nx>data</span><span class=o>?</span><span class=p>.</span><span class=nx>message</span> <span class=o>||</span> <span class=s2>&#34;登录失败，请重试&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>finally</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>setLoading</span><span class=p>(</span><span class=kc>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>Container</span> <span class=na>component</span><span class=o>=</span><span class=s>&#34;main&#34;</span> <span class=na>maxWidth</span><span class=o>=</span><span class=s>&#34;xs&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Paper</span> <span class=na>elevation</span><span class=o>=</span><span class=p>{</span><span class=mi>3</span><span class=p>}</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>marginTop</span>: <span class=kt>8</span><span class=p>,</span> <span class=nx>padding</span>: <span class=kt>4</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>BaseForm</span><span class=p>&lt;</span><span class=nt>LoginFormData</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=na>onSubmit</span><span class=o>=</span><span class=p>{</span><span class=nx>handleSubmit</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=na>defaultValues</span><span class=o>=</span><span class=p>{{</span> <span class=nx>username</span><span class=o>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span> <span class=nx>password</span><span class=o>:</span> <span class=s2>&#34;&#34;</span> <span class=p>}}</span>
+</span></span><span class=line><span class=cl>          <span class=na>formTitle</span><span class=o>=</span><span class=s>&#34;登录到 TactiCore&#34;</span>
+</span></span><span class=line><span class=cl>          <span class=na>schema</span><span class=o>=</span><span class=p>{</span><span class=nx>loginSchema</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=na>submitButtonText</span><span class=o>=</span><span class=p>{</span><span class=nx>loading</span> <span class=o>?</span> <span class=s2>&#34;登录中...&#34;</span> <span class=o>:</span> <span class=s2>&#34;登录&#34;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>{</span><span class=cm>/* 表单字段 */</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>BaseForm</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Paper</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>Container</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>组件特点</strong>：</p><ul><li><strong>表单验证</strong>：使用 Zod 进行表单验证</li><li><strong>状态管理</strong>：处理加载和错误状态</li><li><strong>导航控制</strong>：登录成功后自动导航</li><li><strong>UI 组件</strong>：使用 Material-UI 实现美观界面</li></ul><h3 id=三总结与展望>三、总结与展望</h3><p>TactiCore 的认证系统实现了完整的用户认证流程，从后端的用户管理到前端的状态管理，都采用了现代化的技术方案。</p><p><strong>技术亮点</strong>：</p><ul><li><strong>JWT 认证</strong>：实现无状态认证</li><li><strong>密码加密</strong>：使用 bcrypt 保护用户密码</li><li><strong>上下文管理</strong>：使用 React Context 管理认证状态</li><li><strong>表单验证</strong>：使用 Zod 实现类型安全的表单验证</li><li><strong>UI 组件</strong>：使用 Material-UI 实现美观的界面</li></ul><p>通过这一系列模块的精心设计和实现，TactiCore 的认证系统为用户提供了安全、便捷的认证体验，为系统的其他功能模块奠定了坚实的基础。</p><hr></section><footer class=article-footer><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><script src=//unpkg.com/@waline/client@v2/dist/waline.js></script><link href=//unpkg.com/@waline/client@v2/dist/waline.css rel=stylesheet><div id=waline class=waline-container></div><style>.waline-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding);--waline-font-size:var(--article-font-size)}.waline-container .wl-count{color:var(--card-text-color-main)}</style><script>Waline.init({avatar:"",dark:'html[data-scheme="dark"]',el:"#waline",emoji:["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],lang:"zh-CN",locale:{admin:"Admin",placeholder:"说点啥~"},requiredMeta:["nick","mail","url"],serverURL:"comment.cycbloom.com"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2025 鎏金阁</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.30.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
